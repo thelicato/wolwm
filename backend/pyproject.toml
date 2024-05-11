@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "wolwm"
+version = "0.0.1"
+description = ""
+authors = ["thelicato <thelicatov@duck.com>"]
+include = [{ path = "wolwm/ui/**/*", format = ["sdist", "wheel"] }]
+packages = [{include = "wolwm"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = {extras = ["all"], version = "^0.12.3"}
+gevent = "^24.2.1"
+fastapi = "^0.111.0"
+uvicorn = "^0.29.0"
+structlog = "^24.1.0"
+requests = "^2.31.0"
+sqlalchemy = "^2.0.30"
+pyhumps = "^3.8.0"
+backoff = "^2.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+wolwm = 'wolwm.main:main'
