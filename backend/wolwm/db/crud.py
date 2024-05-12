@@ -4,6 +4,7 @@ Module for CRUD db functions
 
 # Standard library imports
 from typing import List
+from datetime import datetime
 from contextlib import contextmanager
 
 # Local application imports
@@ -62,3 +63,14 @@ def delete_device(device_id: str) -> None:
             raise Exception("Row not found")
         sqlite_db.delete(row_to_delete)
         sqlite_db.commit()
+
+def update_last_wake(device_id: str) -> None:
+    """Update 'last_waked' field for a device"""
+
+    with get_db() as sqlite_db:
+        row_to_update = sqlite_db.query(models.Device).filter(models.Device.id == device_id).first()
+        if not row_to_update:
+            raise Exception("Row not found")
+        row_to_update.last_waked = datetime.now()
+        sqlite_db.commit()
+        sqlite_db.refresh(row_to_update)
