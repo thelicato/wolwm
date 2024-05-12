@@ -1,11 +1,8 @@
 import { Dispatch, createContext, useContext, useEffect, useState } from 'react';
-import { useWindowSize } from '@uidotdev/usehooks';
-import { NavbarStatus, Theme } from '@/types';
+import { Theme } from '@/types';
 
 // Constants
 const colorThemeLocalStorageKey = 'wolwm-color-theme';
-const navbarStatusLocalStorageKey = 'wolwm-navbar-status';
-const breakpoint = 960;
 
 const getInitialTheme = (): Theme => {
   if (typeof window !== 'undefined' && window.localStorage) {
@@ -24,21 +21,7 @@ const getInitialTheme = (): Theme => {
   return Theme.Light; // light theme as the default;
 };
 
-const getInitialNavbarStatus = (): NavbarStatus => {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    const storedPrefs = window.localStorage.getItem(navbarStatusLocalStorageKey);
-
-    if (typeof storedPrefs === 'string') {
-      return storedPrefs as NavbarStatus;
-    }
-  }
-
-  return NavbarStatus.Open; // open navbar as the default;
-};
-
 interface ProviderInterface {
-  navbarStatus: NavbarStatus;
-  setNavbarStatus: (navbarStatus: NavbarStatus) => void;
   theme: Theme;
   toggleTheme: () => void;
   isModalOpen: boolean;
@@ -48,21 +31,8 @@ interface ProviderInterface {
 export const ThemeContext = createContext<ProviderInterface | null>(null);
 
 const ThemeProvider = ({ children }: any): any => {
-  const size = useWindowSize();
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [navbarStatus, setNavbarStatus] = useState<NavbarStatus>(getInitialNavbarStatus);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!size.width) {
-      return;
-    }
-    if (navbarStatus !== NavbarStatus.AutoCollapsed && size.width < breakpoint) {
-      setNavbarStatus(NavbarStatus.AutoCollapsed);
-    } else if (navbarStatus === NavbarStatus.AutoCollapsed && size.width >= breakpoint) {
-      setNavbarStatus(NavbarStatus.Open);
-    }
-  }, [size]);
 
   const rawSetTheme = (rawTheme: Theme) => {
     const root = window.document.documentElement;
@@ -72,11 +42,6 @@ const ThemeProvider = ({ children }: any): any => {
     root.classList.add(rawTheme);
 
     localStorage.setItem(colorThemeLocalStorageKey, rawTheme);
-  };
-
-  const changeNavbarStatus = (navbarStatus: NavbarStatus) => {
-    setNavbarStatus(navbarStatus);
-    localStorage.setItem(navbarStatusLocalStorageKey, navbarStatus);
   };
 
   const toggleTheme = () => {
@@ -91,8 +56,6 @@ const ThemeProvider = ({ children }: any): any => {
   return (
     <ThemeContext.Provider
       value={{
-        navbarStatus,
-        setNavbarStatus: changeNavbarStatus,
         theme,
         toggleTheme,
         isModalOpen,

@@ -3,12 +3,6 @@ export enum Theme {
   Light = 'light',
 }
 
-export enum NavbarStatus {
-  Open = 'OPEN',
-  Closed = 'CLOSED',
-  AutoCollapsed = 'AUTO_COLLAPSED',
-}
-
 export interface INavLink {
   link: string;
   innerTxt: string;
