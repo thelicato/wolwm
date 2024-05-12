@@ -6,10 +6,9 @@ This modules contains all the db Pydantic types
 from datetime import datetime
 
 # Local application imports
-from wolwm.types.common import BaseDevice
+from wolwm.types.common import Device
 
-class DBDevice(BaseDevice):
+class DBDevice(Device):
     """Class for storing a device in the DB"""
 
-    id: str
     last_waked: datetime

@@ -10,3 +10,8 @@ class BaseDevice(CamelModel):
 
     name: str
     mac: str
+
+class Device(BaseDevice):
+    """Class for storing device data"""
+
+    id: str

@@ -3,6 +3,7 @@ Module for CRUD db functions
 """
 
 # Standard library imports
+from typing import List
 from contextlib import contextmanager
 
 # Local application imports
@@ -32,3 +33,12 @@ def create_device(device: types.db.DBDevice) -> None:
         sqlite_db.add(db_device)
         sqlite_db.commit()
         sqlite_db.refresh(db_device)
+
+def get_devices() -> List[types.db.DBDevice]:
+    """Get all the devices from the DB"""
+
+    with get_db() as sqlite_db:
+        return [
+            types.db.DBDevice.model_validate(item)
+            for item in sqlite_db.query(models.Device).all()
+        ]
