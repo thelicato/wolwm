@@ -75,4 +75,4 @@ AddDeviceReq = BaseDevice
 class WakeReq(CamelModel):
     """Class for wake device request data"""
 
-    id: str
+    device_id: str

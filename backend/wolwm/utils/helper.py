@@ -52,5 +52,5 @@ def setup_folders() -> None:
         logger.warning("DB folder missing, creating it...")
         os.mkdir(db_folder)
 
-def is_valid_mac(mac):
+def is_valid_mac(mac: str) -> bool:
     return bool(re.match(definitions.MAC_ADDRESS_PATTERN, mac))
