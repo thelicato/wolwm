@@ -2,7 +2,6 @@
 This modules contains the all the static definitions
 """
 
-from os import path
 from pathlib import Path
 
 FILE_PATH = Path(__file__)
