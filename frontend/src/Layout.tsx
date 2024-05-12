@@ -37,9 +37,9 @@ export const Layout = ({ children }: IContentProps) => {
 
   const navbarClass = useMemo(() => {
     if (!size.width || size.width > breakpoint) {
-      return 'w-60';
+      return 'w-60 z-30';
     } else if (isMobileNavbarOpen) {
-      return 'w-screen h-screen py-4 flex justify-start fixed bottom-0 left-0 backdrop-blur-sm blur-bg';
+      return 'w-screen h-screen py-4 flex justify-start fixed bottom-0 left-0 backdrop-blur-sm blur-bg z-[9999]';
     } else {
       return 'hidden';
     }
@@ -108,7 +108,7 @@ export const Layout = ({ children }: IContentProps) => {
       {/* Main Container */}
       <div className='flex'>
         {/* Sidebar */}
-        <nav className={`${navbarClass} z-[9999]`}>
+        <nav className={`${navbarClass}`}>
           <div ref={navbarRef} className='w-60 custom-nav flex flex-col text-slate-200'>
             <div className='flex flex-col flex-1 justify-between bg-gray-900 p-2 pt-4'>
               {/* Nav Content */}
