@@ -8,6 +8,7 @@ This module contains multiple helper function used throughout the codebase.
 
 # Standard library imports
 import os
+import re
 from pathlib import Path
 from uuid import uuid4
 
@@ -50,3 +51,6 @@ def setup_folders() -> None:
     if not os.path.isdir(db_folder):
         logger.warning("DB folder missing, creating it...")
         os.mkdir(db_folder)
+
+def is_valid_mac(mac):
+    return bool(re.match(definitions.MAC_ADDRESS_PATTERN, mac))
