@@ -42,3 +42,21 @@ def get_devices() -> List[types.db.DBDevice]:
             types.db.DBDevice.model_validate(item)
             for item in sqlite_db.query(models.Device).all()
         ]
+    
+def get_device_by_id(device_id: str) -> types.db.DBDevice:
+    """Get a device from the DB by its ID"""
+
+    with get_db() as sqlite_db:
+        return types.db.Device.model_validate(
+            sqlite_db.query(models.Device).filter(models.Device.id == device_id).first()
+        )
+
+
+def delete_device(device_id: str) -> None:
+    """Delete a device from the DB"""
+
+    with get_db() as sqlite_db:
+        row_to_delete = sqlite_db.query(models.Device).filter(models.Device.id == device_id).first()
+        if row_to_delete:
+            sqlite_db.delete(row_to_delete)
+            sqlite_db.commit()

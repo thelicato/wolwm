@@ -43,3 +43,17 @@ def add_device(data:types.api.AddDeviceReq, request: Request) -> types.api.Gener
         raise HTTPException(
             status_code=400, detail="Error while adding device"
         )
+    
+@router.delete("/{device_id}", dependencies=[])
+def delete_device(device_id: str, request: Request) -> types.api.GenericDataRes:
+    """Handle delete device requests"""
+
+    try:
+        return services.devices.delete_device(device_id)
+    except Exception as err:
+        logger.error(
+            f"""Error for {request.method} request at {request.url}
+            {str(err)}
+            """
+        )
+        raise HTTPException(status_code=400, detail="Error while deleting device")
