@@ -11,10 +11,7 @@ MAIN_DIR = FILE_PATH.parent.parent.absolute()
 # Common definitions
 MAC_ADDRESS_PATTERN=r'^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$'
 DEFAULT_BASE_PATH = ".wolwm"
-WOLWM_DB_FOLDER = "db"
-WOLWM_SQLITE_STORAGE = path.join(
-    Path.home(), DEFAULT_BASE_PATH, WOLWM_DB_FOLDER, "wolwm.db"
-)
+WOLWM_SQLITE_STORAGE = "wolwm.db"
 
 # Colors
 SUCCESS_COLOR = "\033[92m"
