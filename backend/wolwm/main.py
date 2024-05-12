@@ -1,5 +1,5 @@
 """
-VESTA API Entrypoint
+Main Entrypoint
 """
 
 # External library imports
