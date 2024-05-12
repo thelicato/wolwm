@@ -40,6 +40,17 @@ def add_device(data: types.api.AddDeviceReq) -> types.api.GenericDataRes:
     res = types.api.GenericDataRes(msg="Device correctly added")
     return res
 
+def get_device(device_id: str) -> types.common.Device:
+    """Function to get a specific device"""
+
+    device = crud.get_device_by_id(device_id)
+    res = types.common.Device(
+        id=device.id,
+        name=device.name,
+        mac=device.mac
+    )
+    return res
+
 def delete_device(device_id: str) -> types.api.GenericDataRes:
     """Function to delete a device"""
 

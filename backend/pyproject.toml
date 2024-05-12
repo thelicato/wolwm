@@ -17,6 +17,7 @@ requests = "^2.31.0"
 sqlalchemy = "^2.0.30"
 pyhumps = "^3.8.0"
 backoff = "^2.2.1"
+wakeonlan = "^3.1.0"
 
 [build-system]
 requires = ["poetry-core"]

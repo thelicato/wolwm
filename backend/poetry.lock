@@ -1364,6 +1364,17 @@ docs = ["Sphinx (>=4.1.2,<4.2.0)", "sphinx-rtd-theme (>=0.5.2,<0.6.0)", "sphinxc
 test = ["Cython (>=0.29.36,<0.30.0)", "aiohttp (==3.9.0b0)", "aiohttp (>=3.8.1)", "flake8 (>=5.0,<6.0)", "mypy (>=0.800)", "psutil", "pyOpenSSL (>=23.0.0,<23.1.0)", "pycodestyle (>=2.9.0,<2.10.0)"]
 
 [[package]]
+name = "wakeonlan"
+version = "3.1.0"
+description = "A small python module for wake on lan."
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "wakeonlan-3.1.0-py3-none-any.whl", hash = "sha256:9414da87f48e5dc8a1bb0fa15aba5a0079cfd014231c4cc8e6f2477a0d078c7e"},
+    {file = "wakeonlan-3.1.0.tar.gz", hash = "sha256:aa12edc2587353528a89ad58a54c63212dc2a12226c186b7fcc02caa162cd962"},
+]
+
+[[package]]
 name = "watchfiles"
 version = "0.21.0"
 description = "Simple, modern and high performance file watching and code reload in python."
@@ -1605,4 +1616,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e78a2c417c874022dbb319174c3dc952dd51a3bced603173b0cb3e4d432d198d"
+content-hash = "5233f28eb0d2589f8c3536f663588153c03b13752921d17ad10a6701ddaf4466"
