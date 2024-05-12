@@ -1,0 +1,47 @@
+version: "3"
+
+tasks:
+  install_frontend:
+    cmds:
+      - yarn --cwd frontend install
+    sources:
+      - frontend/package.json
+      - frontend/yarn.lock
+    generates:
+      - frontend/node_modules
+
+  install_backend:
+    cmds:
+      - poetry -C backend install
+    sources:
+      - backend/wolwm/**/*.py
+
+  frontend:
+    deps: [install_frontend]
+    cmds:
+      - yarn --cwd frontend run dev
+
+  backend:
+    deps: [install_backend]
+    cmds:
+      - poetry -C backend run wolwm -dev -v
+
+  dev:
+    deps: [install_backend, install_frontend]
+    cmds:
+      - tmux new-session -d -s wolwm-dev
+      - tmux split-window -h -t wolwm-dev
+
+      # Send commands to each pane
+      - tmux send-keys -t wolwm-dev:0.0 'poetry -C backend run wolwm -dev -v' C-m
+      - tmux send-keys -t wolwm-dev:0.1 'yarn --cwd frontend run dev' C-m
+
+      # Attach to the session
+      - tmux attach-session -t wolwm-dev
+
+  build:
+    deps: [install_backend, install_frontend]
+    cmds:
+      - yarn --cwd frontend run build
+      - rm -rf ./backend/wolwm/ui; mv ./frontend/dist ./backend/wolwm/ui
+      - cd backend && poetry build
