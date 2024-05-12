@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply overflow-x-hidden;
+    @apply scroll-smooth;
+    @apply min-h-screen;
+  }
+  #root {
+    @apply min-h-screen;
+  }
+  a {
+    @apply transition-colors;
+    @apply duration-200;
+  }
+  p {
+    @apply text-lg;
+    @apply text-slate-500;
+    @apply dark:text-white;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply text-slate-800;
+    @apply dark:text-white;
+  }
+  .main-content {
+    @apply w-[calc(100vw-15rem)]   md:w-[calc(100vw-3.5rem)] custom-min-h-screen;
+  }
+  .fixed-nav {
+    @apply fixed h-[calc(100vh-4rem)] top-[4rem];
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white shadow-md rounded-md p-2 dark:bg-gray-800 dark:text-white;
+  }
+}
+
+@layer utilities {
+  .custom-min-h-screen {
+    @apply min-h-[calc(100vh-4rem)];
+  }
+}
+
+.blur-bg {
+  background-color: rgba(0, 0, 0, 0.8);
+}
