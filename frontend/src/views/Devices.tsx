@@ -34,6 +34,20 @@ export const Devices = () => {
     setIsLoading(false);
   };
 
+  const removeDevice = async (deviceId: string) => {
+    setIsLoading(true);
+    try {
+      await RESTManagerInstance.deleteDevice(deviceId);
+      const res = await RESTManagerInstance.getDevices();
+      setDevices(res.data.devices);
+      await sleep(500);
+      toast.success('Device removed');
+    } catch (err) {
+      toast.error('Unable to remove device');
+    }
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     loadDevices();
   }, []);
@@ -67,7 +81,10 @@ export const Devices = () => {
                 >
                   Wake
                 </button>
-                <button className='my-4 py-2 w-full bg-rose-700 hover:bg-rose-900 text-white font-bold rounded-sm'>
+                <button
+                  className='my-4 py-2 w-full bg-rose-700 hover:bg-rose-900 text-white font-bold rounded-sm'
+                  onClick={() => removeDevice(device.id)}
+                >
                   Remove
                 </button>
               </div>
