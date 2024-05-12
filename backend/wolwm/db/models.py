@@ -18,7 +18,7 @@ class Device(Base):
 
     __tablename__ = "devices"
 
-    id = Column(Integer, primary_key=True, default=lambda: str(uuid4()))
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
     name = Column(String)
     mac = Column(String(17), unique=True)
     last_waked = Column(DateTime)

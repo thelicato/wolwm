@@ -31,12 +31,13 @@ def run(
     ) -> None:
     """This method starts the FastAPI server"""
 
-    helper.setup_folders()
-
     # Init logger
     logger.bold(f"Running in mode on {host}:{port}")
     if verbose:
         logger.bold("Verbose mode on")
+
+    # Check that the needed folders are ok
+    helper.setup_folders()
 
     # Init DB
     db.init_db()
