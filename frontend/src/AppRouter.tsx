@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Nav, Header, Content } from '@/layout';
+import { Layout } from '@/Layout';
 import { Devices, NoMatch, Error } from '@/views';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { INFO } from '@/config';
@@ -9,15 +9,9 @@ const NoMatchElement = () => {
 
   if (loggedIn) {
     return (
-      <>
-        <Header />
-        <div className='flex'>
-          <Nav />
-          <Content>
-            <NoMatch />
-          </Content>
-        </div>
-      </>
+      <Layout>
+        <NoMatch />
+      </Layout>
     );
   } else {
     return (
@@ -30,15 +24,9 @@ const NoMatchElement = () => {
 
 const CommonRoute = () => {
   return (
-    <>
-      <Header />
-      <div className='flex'>
-        <Nav />
-        <Content>
-          <Outlet />
-        </Content>
-      </div>
-    </>
+    <Layout>
+      <Outlet />
+    </Layout>
   );
 };
 

@@ -31,10 +31,10 @@
     @apply dark:text-white;
   }
   .main-content {
-    @apply w-[calc(100vw-15rem)]   md:w-[calc(100vw-3.5rem)] custom-min-h-screen;
+    @apply w-screen md:w-[calc(100vw-15rem)] custom-min-h-screen;
   }
-  .fixed-nav {
-    @apply fixed h-[calc(100vh-4rem)] top-[4rem];
+  .custom-nav {
+    @apply fixed h-screen md:h-[calc(100vh-4rem)] top-0 md:top-[4rem];
   }
 }
 
