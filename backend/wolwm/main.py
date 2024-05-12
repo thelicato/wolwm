@@ -32,7 +32,7 @@ def run(
     """This method starts the FastAPI server"""
 
     # Init logger
-    logger.bold(f"Running in mode on {host}:{port}")
+    logger.bold(f"Starting on {host}:{port}")
     if verbose:
         logger.bold("Verbose mode on")
 
