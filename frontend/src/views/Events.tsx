@@ -59,7 +59,8 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
   });
 
   return (
-    <div className='w-full'>
+    <>
+    <div className='w-full max-w-[calc(100vw-2rem)] overflow-scroll pb-4'>
       <table className='w-full rounded-t-md overflow-hidden border-collapse'>
         <thead className='bg-gray-800 text-white h-10'>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -113,8 +114,10 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
           })}
         </tbody>
       </table>
-      {/* Pagination */}
-      {table.getPageCount() > 1 && (
+      
+    </div>
+    {/* Pagination */}
+    {table.getPageCount() > 1 && (
         <div className='flex items-center mt-4 border-collapse text-slate-700'>
           <button
             className='border border-box border-gray-400 rounded-l p-1 h-8 bg-white disabled:bg-gray-100'
@@ -152,7 +155,7 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
           </span>
         </div>
       )}
-    </div>
+    </>
   );
 };
 export const Events = () => {
@@ -234,9 +237,9 @@ export const Events = () => {
               className='absolute w-5 h-5 top-2.5 left-2.5 text-slate-600'
             >
               <path
-                fill-rule='evenodd'
+                fillRule='evenodd'
                 d='M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z'
-                clip-rule='evenodd'
+                clipRule='evenodd'
               />
             </svg>
 
