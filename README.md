@@ -47,6 +47,10 @@
 3. Click "Wake" to send a magic packet!
 
 
+## 📷 Screenshots
+| ![Devices](./screenshots/devices.png) | ![Events](./screenshots/events.png) |
+
+
 ## 📌 Prerequisites
 
 To use WOLWM, ensure you have:

@@ -102,7 +102,7 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
                   return (
                     <td
                       key={cell.id}
-                      className='text-center py-2 box-border border border-gray-400'
+                      className='text-center p-2 box-border border border-gray-400'
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
