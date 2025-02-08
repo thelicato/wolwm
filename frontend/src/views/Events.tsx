@@ -158,7 +158,7 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
 export const Events = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [events, setEvents] = useState<IEvent[]>([]);
-  const [visibleEvents, setVisibleEvents] = useState<IEvent[]>([])
+  const [visibleEvents, setVisibleEvents] = useState<IEvent[]>([]);
 
   const columns = useMemo<ColumnDef<IEvent>[]>(
     () => [
@@ -188,8 +188,8 @@ export const Events = () => {
   const fuse = new Fuse(events, {
     includeScore: false,
     threshold: 0.3,
-    keys: ['eventType', 'eventData']
-  })
+    keys: ['eventType', 'eventData'],
+  });
 
   const loadEvents = async () => {
     try {
@@ -210,12 +210,12 @@ export const Events = () => {
 
   const searchEvents = (input: string) => {
     if (input.trim().length === 0) {
-      setVisibleEvents(events)
+      setVisibleEvents(events);
     } else {
       const res = fuse.search(input);
-      setVisibleEvents(res.map(r => r.item))
+      setVisibleEvents(res.map((r) => r.item));
     }
-  }
+  };
 
   if (isLoading) {
     return <Loading blur />;
@@ -243,17 +243,18 @@ export const Events = () => {
             <input
               className='w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow'
               placeholder='Search event'
-              onChange={e => searchEvents(e.currentTarget.value)}
+              onChange={(e) => searchEvents(e.currentTarget.value)}
             />
           </div>
         </div>
-        {visibleEvents.length > 0 ? (<EventsTable columns={columns} data={visibleEvents} />) : (
-                    <div className='w-full flex flex-col justify-center items-center'>
-                    <MdError size={100} className='dark:text-white' />
-                    <h2 className='text-2xl font-semibold'>No Events</h2>
-                  </div>
+        {visibleEvents.length > 0 ? (
+          <EventsTable columns={columns} data={visibleEvents} />
+        ) : (
+          <div className='w-full flex flex-col justify-center items-center'>
+            <MdError size={100} className='dark:text-white' />
+            <h2 className='text-2xl font-semibold'>No Events</h2>
+          </div>
         )}
-        
       </div>
     </>
   );

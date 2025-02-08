@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# wolwm
+# WOLWM
 
 <div align="center" style="text-align:center">
   <br>
@@ -16,7 +16,7 @@
 - 📋 **Device Management** – Save and manage multiple devices for quick access.
 - 🔄 **Logging & History** – Track which devices were woken up and when.
 
-## 🔧 Installation
+## 🔧 Setup
 
 ### Option 1: Running with Docker (Recommended)
 
@@ -35,7 +35,7 @@
    ```sh
    git clone https://github.com/thelicato/wolwm.git && cd wolwm
    ```
-2. Install dependencies:
+2. Run in dev mode:
    ```sh
    task dev # You have to install all the dev requirements
    ```
@@ -67,7 +67,8 @@ Wake-on-LAN (WoL) is a networking standard that allows you to remotely wake up a
 
 ## 🏗️ Future Improvements
 
-- 🔄 Scheduled wake-ups & shutdowns.
+- Scheduled wake-ups & shutdowns.
+- Add authentication
 
 ## 📜 License
 
