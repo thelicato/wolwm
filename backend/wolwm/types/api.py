@@ -7,7 +7,7 @@ from typing import List
 
 # Local application imports
 from wolwm.types.base import CamelModel
-from wolwm.types.common import BaseDevice, Device
+from wolwm.types.common import BaseDevice, Device, Event
 
 ############################
 # Generic and common types #
@@ -76,3 +76,13 @@ class WakeReq(CamelModel):
     """Class for wake device request data"""
 
     device_id: str
+
+
+###############################
+# Types for /events REST API #
+###############################
+
+class EventsRes(CamelModel):
+    """Class for get events response data"""
+
+    events: List[Event]
