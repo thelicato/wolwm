@@ -35,6 +35,8 @@ def wake_device(data: types.api.WakeReq) -> types.api.GenericDataRes:
 
     send_magic_packet(device.mac)
     crud.update_last_wake(data.device_id)
+    # Save event on the DB
+    crud.add_event(types.enum.EventType.WAKE, f"Wake packet sent to  device'{data.device_id}' (Name: '{device.name}' - MAC: '{device.mac}') ")
 
     res = types.api.GenericDataRes(msg="Magic packet correctly sent")
     return res

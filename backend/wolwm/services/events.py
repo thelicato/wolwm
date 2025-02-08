@@ -5,7 +5,6 @@ Service module for devices management
 # Local application imports
 from wolwm import types
 from wolwm.db import crud
-from wolwm.utils import helper
 
 def get_events() -> types.api.EventsRes:
     """Function to retrieve events from the db"""

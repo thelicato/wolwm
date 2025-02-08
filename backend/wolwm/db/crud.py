@@ -62,7 +62,7 @@ def delete_device(device_id: str) -> None:
         if not row_to_delete:
             raise Exception("Row not found")
         sqlite_db.delete(row_to_delete)
-        sqlite_db.commit()
+        sqlite_db.commit()        
 
 def update_last_wake(device_id: str) -> None:
     """Update 'last_waked' field for a device"""
