@@ -82,7 +82,3 @@
     @apply bg-black/80;
   }
 }
-
-.blur-bg {
-  background-color: rgba(0, 0, 0, 0.8);
-}
