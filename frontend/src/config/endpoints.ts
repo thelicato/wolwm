@@ -21,3 +21,7 @@ export const DEVICES_ROUTE: { [properties: string]: string } = {
 export const WAKE_ROUTE: { [properties: string]: string } = {
   BASE: '/wake',
 };
+
+export const EVENTS_ROUTE: { [properties: string]: string } = {
+  BASE: '/events',
+};

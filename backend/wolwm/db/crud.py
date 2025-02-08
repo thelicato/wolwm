@@ -62,7 +62,7 @@ def delete_device(device_id: str) -> None:
         if not row_to_delete:
             raise Exception("Row not found")
         sqlite_db.delete(row_to_delete)
-        sqlite_db.commit()
+        sqlite_db.commit()        
 
 def update_last_wake(device_id: str) -> None:
     """Update 'last_waked' field for a device"""
@@ -74,3 +74,25 @@ def update_last_wake(device_id: str) -> None:
         row_to_update.last_waked = datetime.now()
         sqlite_db.commit()
         sqlite_db.refresh(row_to_update)
+
+def add_event(event_type: types.enum.EventType, event_data: str) -> None:
+    """Add new event"""
+
+    with get_db() as sqlite_db:
+        db_event = models.Event(
+            event_type=event_type,
+            event_data=event_data,
+            timestamp=datetime.now()
+        )
+        sqlite_db.add(db_event)
+        sqlite_db.commit()
+        sqlite_db.refresh(db_event)
+
+def get_events() -> List[types.db.DBEvent]:
+    """Get all the events from the DB"""
+
+    with get_db() as sqlite_db:
+        return [
+            types.db.DBEvent.model_validate(item)
+            for item in sqlite_db.query(models.Event).all()
+        ]

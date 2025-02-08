@@ -11,6 +11,7 @@ from wolwm.api import routes
 router = APIRouter(prefix="/api/v1")
 router.include_router(routes.devices.router)
 router.include_router(routes.wake.router)
+router.include_router(routes.events.router)
 
 
 @router.get("/status")  # Status endpoint

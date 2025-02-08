@@ -37,6 +37,9 @@ def add_device(data: types.api.AddDeviceReq) -> types.api.GenericDataRes:
         last_waked=datetime(1970,1,1)
     ))
 
+    # Save event on the DB
+    crud.add_event(types.enum.EventType.DEVICE_ADDED, f"Device '{data.name}' added (MAC: {data.mac})")
+
     res = types.api.GenericDataRes(msg="Device correctly added")
     return res
 
@@ -55,5 +58,7 @@ def delete_device(device_id: str) -> types.api.GenericDataRes:
     """Function to delete a device"""
 
     crud.delete_device(device_id)
+    # Save event on the DB
+    crud.add_event(types.enum.EventType.DEVICE_REMOVED, f"Device '{device_id}' removed")
     res = types.api.GenericDataRes(msg="Device correctly deleted")
     return res

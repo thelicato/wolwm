@@ -1,6 +1,6 @@
 {
   "name": "wolwm",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,9 +14,11 @@
   "dependencies": {
     "@react-hook/window-size": "^3.1.1",
     "@szhsin/react-menu": "^4.1.0",
+    "@tanstack/react-table": "^8.20.6",
     "@tippyjs/react": "^4.2.6",
     "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.6.8",
+    "fuse.js": "^7.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.3",

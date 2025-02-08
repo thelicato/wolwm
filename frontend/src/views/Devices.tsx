@@ -21,9 +21,9 @@ export const Devices = () => {
 
   const loadDevices = async () => {
     try {
+      await sleep(500);
       const res = await RESTManagerInstance.getDevices();
       setDevices(res.data.devices);
-      await sleep(500);
       setIsLoading(false);
       toast.success('Devices loaded');
     } catch (err) {
@@ -34,8 +34,8 @@ export const Devices = () => {
   const wakeDevice = async (deviceId: string) => {
     setIsLoading(true);
     try {
-      await RESTManagerInstance.wakeDevice({ deviceId: deviceId });
       await sleep(500);
+      await RESTManagerInstance.wakeDevice({ deviceId: deviceId });
       toast.success('Magic Packet correctly sent');
     } catch (err) {
       toast.error('Unable to wake device');
@@ -112,7 +112,9 @@ export const Devices = () => {
           <form className='flex flex-col gap-2' onSubmit={handleSubmit(addDevice)}>
             <div className='flex flex-col md:flex-row gap-2 bg-amber-100 p-2 rounded-lg mb-4 shadow-sm items-center'>
               <IoIosWarning size={24} className='text-amber-500' />
-              <p className='dark:text-slate-800 text-center'>The only format allowed for the MAC address is</p>
+              <p className='dark:text-slate-800 text-center'>
+                The only format allowed for the MAC address is
+              </p>
               <pre className=' text-slate-500 pt-[1px]'>FF:FF:FF:FF:FF:FF</pre>
             </div>
             <label>Name</label>

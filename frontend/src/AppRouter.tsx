@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Layout } from '@/Layout';
-import { Devices, NoMatch, Error } from '@/views';
+import { Devices, NoMatch, Error, Events } from '@/views';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { INFO } from '@/config';
 
@@ -42,6 +42,10 @@ const AppRouter = createBrowserRouter(
             {
               path: '',
               element: <Devices />,
+            },
+            {
+              path: '/events',
+              element: <Events />,
             },
           ],
         },
