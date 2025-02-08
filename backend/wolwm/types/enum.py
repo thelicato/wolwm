@@ -9,3 +9,10 @@ class DeployMode(str, Enum):
 
     DEV = "development"
     PROD = "production"
+
+class EventType(str, Enum):
+    """Enum class for event types"""
+
+    WAKE = "wake"
+    DEVICE_ADDED = "device_added"
+    DEVICE_REMOVED = "device_removed"

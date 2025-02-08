@@ -22,3 +22,13 @@ class Device(Base):
     name = Column(String)
     mac = Column(String(17), unique=True)
     last_waked = Column(DateTime)
+
+class Event(Base):
+    """SQLAlchemy class for events table"""
+
+    __tablename__ = "events"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    event_type = Column(String)
+    event_data = Column(String)
+    timestamp = Column(DateTime)
