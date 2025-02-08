@@ -32,18 +32,10 @@ async def serve_favicon() -> FileResponse:
     """Serve the favicon separately"""
     return FileResponse(f"{static_folder}/favicon.ico")
 
-
-@ui.get("/ui/logo192.png")
+@ui.get("/ui/logo.png")
 async def serve_logo_small() -> FileResponse:
     """Serve the logo separately"""
-    return FileResponse(f"{static_folder}/logo192.png")
-
-
-@ui.get("/ui/logo512.png")
-async def serve_logo_big() -> FileResponse:
-    """Serve the logo separately"""
-    return FileResponse(f"{static_folder}/logo512.png")
-
+    return FileResponse(f"{static_folder}/logo.png")
 
 @ui.get("/ui/manifest.json")
 async def serve_manifest() -> FileResponse:
