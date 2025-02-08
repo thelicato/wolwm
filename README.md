@@ -49,7 +49,8 @@
 
 ## 📷 Screenshots
 | ![Devices](./screenshots/devices.png) | ![Events](./screenshots/events.png) |
-| ------------------------------------- | ----------------------------------- |
+| ------------------------------------- | ----------------------------------  |
+| Devices Page                          | Events Page                         |
 
 ## 📌 Prerequisites
 
