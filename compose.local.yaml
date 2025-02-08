@@ -1,6 +1,7 @@
 services:
   wolwm:
-    image: ghcr.io/thelicato/wolwm
+    build: .
+    container_name: wolwm
     network_mode: "host"
     restart: "unless-stopped"
     command: "--host 0.0.0.0"
