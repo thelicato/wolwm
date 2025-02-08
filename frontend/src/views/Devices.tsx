@@ -21,9 +21,9 @@ export const Devices = () => {
 
   const loadDevices = async () => {
     try {
+      await sleep(500);
       const res = await RESTManagerInstance.getDevices();
       setDevices(res.data.devices);
-      await sleep(500);
       setIsLoading(false);
       toast.success('Devices loaded');
     } catch (err) {
@@ -34,8 +34,8 @@ export const Devices = () => {
   const wakeDevice = async (deviceId: string) => {
     setIsLoading(true);
     try {
-      await RESTManagerInstance.wakeDevice({ deviceId: deviceId });
       await sleep(500);
+      await RESTManagerInstance.wakeDevice({ deviceId: deviceId });
       toast.success('Magic Packet correctly sent');
     } catch (err) {
       toast.error('Unable to wake device');

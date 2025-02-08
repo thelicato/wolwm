@@ -12,10 +12,19 @@ import {
 import toast from 'react-hot-toast';
 import { MdError } from 'react-icons/md';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
-import { IEvent } from '@/types';
+import { HiChevronLeft, HiChevronRight, HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi2";
+import { IEvent, EventType } from '@/types';
 import { RESTManagerInstance } from '@/utils/rest';
 import { sleep } from '@/utils/helpers';
 import { Loading } from '@/components';
+
+const EVENT_TYPE_CLASSNAMES = "rounded-md text-white p-[4px]"
+
+const EVENT_TYPE_MAPPINGS: {[key in EventType]: JSX.Element} = {
+  [EventType.DEVICE_ADDED]: <span className={`${EVENT_TYPE_CLASSNAMES} bg-teal-500`}>DEVICE ADDED</span>,
+  [EventType.DEVICE_REMOVED]: <span className={`${EVENT_TYPE_CLASSNAMES} bg-rose-500`}>DEVICE REMOVED</span>,
+  [EventType.WAKE]: <span className={`${EVENT_TYPE_CLASSNAMES} bg-indigo-500`}>WAKE REQUEST</span>
+}
 
 const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEvent>[] }) => {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -46,12 +55,18 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, index) => {
-                const isLast = index === headerGroup.headers.length -1
+                const isLast = index === headerGroup.headers.length - 1;
                 return (
-                  <th key={header.id} colSpan={header.colSpan} className={isLast ? '' : 'box-border border-r border-gray-400'}>
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className={isLast ? '' : 'box-border border-r border-gray-400'}
+                  >
                     <div
                       {...{
-                        className: header.column.getCanSort() ? 'flex justify-center items-center gap-2 cursor-pointer select-none' : '',
+                        className: header.column.getCanSort()
+                          ? 'flex justify-center items-center gap-2 cursor-pointer select-none'
+                          : '',
                         onClick: header.column.getToggleSortingHandler(),
                       }}
                     >
@@ -75,7 +90,10 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
               <tr key={row.id} className={rowBg}>
                 {row.getVisibleCells().map((cell) => {
                   return (
-                    <td key={cell.id} className='text-center py-2 box-border border border-gray-400'>
+                    <td
+                      key={cell.id}
+                      className='text-center py-2 box-border border border-gray-400'
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   );
@@ -85,42 +103,45 @@ const EventsTable = ({ data, columns }: { data: IEvent[]; columns: ColumnDef<IEv
           })}
         </tbody>
       </table>
-      <div className='flex items-center gap-2'>
-        <button
-          className='border rounded p-1'
-          onClick={() => table.firstPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          className='border rounded p-1'
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          className='border rounded p-1'
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          className='border rounded p-1'
-          onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>>'}
-        </button>
-        <span className='flex items-center gap-1'>
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of {table.getPageCount().toLocaleString()}
-          </strong>
-        </span>
-      </div>
+      {/* Pagination */}
+      {table.getPageCount() > 1 && (
+        <div className='flex items-center mt-4 border-collapse text-slate-700'>
+          <button
+            className='border border-box border-gray-400 rounded-l p-1 h-8 bg-white disabled:bg-gray-100'
+            onClick={() => table.firstPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <HiChevronDoubleLeft />
+          </button>
+          <button
+            className='border border-box border-gray-400 p-1 h-8 bg-white disabled:bg-gray-100'
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <HiChevronLeft />
+          </button>
+          <button
+            className='border border-box border-gray-400 p-1 h-8 bg-white disabled:bg-gray-100'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <HiChevronRight />
+          </button>
+          <button
+            className='border border-box border-gray-400 p-1 h-8 bg-white disabled:bg-gray-100'
+            onClick={() => table.lastPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <HiChevronDoubleRight />
+          </button>
+          <span className='flex items-center gap-1 border border-box border-gray-400 rounded-r p-1 h-8 bg-white'>
+            <div>Page</div>
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of {table.getPageCount().toLocaleString()}
+            </strong>
+          </span>
+        </div>
+      )}
     </div>
   );
 };
@@ -131,7 +152,14 @@ export const Events = () => {
   const columns = useMemo<ColumnDef<IEvent>[]>(
     () => [
       {
-        accessorFn: (row) => row.eventType,
+        accessorFn: (row) => row.timestamp.slice(0, -7),
+        id: 'timestamp',
+        cell: (e) => e.getValue(),
+        header: () => <span>Timestamp</span>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorFn: (row) => EVENT_TYPE_MAPPINGS[row.eventType],
         id: 'eventType',
         cell: (e) => e.getValue(),
         header: () => <span>Type</span>,
@@ -139,14 +167,7 @@ export const Events = () => {
       },
       {
         accessorKey: 'eventData',
-        header: () => 'Data',
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.timestamp.slice(0,-7),
-        id: 'timestamp',
-        cell: (e) => e.getValue(),
-        header: () => <span>Timestamp</span>,
+        header: () => 'Info',
         footer: (props) => props.column.id,
       },
     ],
