@@ -39,7 +39,7 @@ export const Layout = ({ children }: IContentProps) => {
     if (!size.width || size.width > breakpoint) {
       return 'w-60 z-30';
     } else if (isMobileNavbarOpen) {
-      return 'w-screen h-screen py-4 flex justify-start fixed bottom-0 left-0 backdrop-blur-sm blur-bg z-[9999]';
+      return 'w-screen h-dvh py-4 flex justify-start fixed bottom-0 left-0 backdrop-blur-sm blur-bg z-[9999]';
     } else {
       return 'hidden';
     }

@@ -77,7 +77,7 @@ export const Modal = (props: IModalProps) => {
   return (
     <>
       <div
-        className={`w-screen h-screen py-4 flex justify-start fixed bottom-0 left-0 ${modalBlurClasses} ${
+        className={`w-screen h-dvh py-4 flex justify-start fixed bottom-0 left-0 ${modalBlurClasses} ${
           props.keepLayout ? 'z-10' : 'z-[999]'
         }`}
       >
