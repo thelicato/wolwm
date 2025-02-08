@@ -13,7 +13,7 @@ from gevent import monkey
 
 # Project Info
 __title__ = "wolwm"
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 __description__ = (
     "Wake-On-LAN Web Manager"
 )
