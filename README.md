@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# wolwm
+# WOLWM
 
 <div align="center" style="text-align:center">
   <br>
@@ -16,12 +16,48 @@
 - 📋 **Device Management** – Save and manage multiple devices for quick access.
 - 🔄 **Logging & History** – Track which devices were woken up and when.
 
+## 🔧 Setup
+
+### Option 1: Running with Docker (Recommended)
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/thelicato/wolwm.git && cd wolwm
+   ```
+2. Install dependencies:
+   ```sh
+   docker compose up -d
+   ```
+
+### Option 2: Manual (dev mode)
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/thelicato/wolwm.git && cd wolwm
+   ```
+2. Run in dev mode:
+   ```sh
+   task dev # You have to install all the dev requirements
+   ```
+
+## 🚀 Usage
+
+1. Open your browser and navigate to `http://localhost:5000` (or `http://localhost:5173` if running in dev mode)
+2. Add your device(s) by specifying their MAC address and network broadcast IP.
+3. Click "Wake" to send a magic packet!
+
+
+## 📷 Screenshots
+| ![Devices](./screenshots/devices.png) | ![Events](./screenshots/events.png) |
+| ------------------------------------- | ----------------------------------  |
+| Devices Page                          | Events Page                         |
+
 ## 📌 Prerequisites
 
 To use WOLWM, ensure you have:
 
 - A device with **Wake-on-LAN** enabled in BIOS and OS.
-- A **web server** to host the app (e.g., Node.js, Flask, or PHP-based servers).
+- A **web server** to host the app.
 - **Network access** to the target devices (they should be in the same subnet or properly routed).
 
 ## 📖 Wake-on-LAN Explained
@@ -36,7 +72,8 @@ Wake-on-LAN (WoL) is a networking standard that allows you to remotely wake up a
 
 ## 🏗️ Future Improvements
 
-- 🔄 Scheduled wake-ups & shutdowns.
+- Scheduled wake-ups & shutdowns.
+- Add authentication
 
 ## 📜 License
 
