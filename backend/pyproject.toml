@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wolwm"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["thelicato <thelicatov@duck.com>"]
 include = [{ path = "wolwm/ui/**/*", format = ["sdist", "wheel"] }]

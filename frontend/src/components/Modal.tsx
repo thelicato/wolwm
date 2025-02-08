@@ -77,23 +77,23 @@ export const Modal = (props: IModalProps) => {
   return (
     <>
       <div
-        className={`w-screen h-screen py-4 flex justify-start fixed bottom-0 left-0 ${modalBlurClasses} ${
+        className={`w-screen h-dvh py-4 flex justify-start fixed bottom-0 left-0 ${modalBlurClasses} ${
           props.keepLayout ? 'z-10' : 'z-[999]'
         }`}
       >
         <div
           ref={ref}
-          className={`${modalClasses} ${overflowClass} relative flex flex-col p-10 bg-white dark:bg-gray-800 m-auto rounded-md max-h-full`}
+          className={`${modalClasses} ${overflowClass} relative flex flex-col p-5 md:p-10 bg-white dark:bg-gray-800 m-auto rounded-md max-h-full`}
         >
           <div className='flex justify-between relative align-center'>
             <h3 className='flex-1 text-4xl font-bold py-2'>{props.title}</h3>
             {!props.fixed && (
               <>
-                <span className='absolute right-10 top-2 border-2 border-gray-400 text-gray-500 rounded text-xs p-1 mr-1 dark:bg-white'>
+                <span className='hidden md:absolute right-10 top-2 border-2 border-gray-400 text-gray-500 rounded text-xs p-1 mr-1 dark:bg-white'>
                   ESC
                 </span>
                 <AiFillCloseCircle
-                  className='absolute right-0 cursor-pointer transition-colors duration-300 text-red-500 hover:text-red-700'
+                  className='absolute right-0 cursor-pointer transition-colors duration-300 text-red-500 hover:text-red-700 w-12'
                   size={38}
                   onClick={props.onClose}
                 />

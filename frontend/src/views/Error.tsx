@@ -3,7 +3,7 @@ import ErrorImg from '@/assets/generic_error.png';
 
 export const Error = () => {
   return (
-    <div className='bg-gray-900 w-screen min-h-screen m-auto font-Jost py-4'>
+    <div className='bg-gray-900 w-screen min-h-dvh m-auto font-Jost py-4'>
       <div className='m-auto'>
         <div className='content'>
           <div className='inset-0 text-center flex flex-col justify-center p-8'>

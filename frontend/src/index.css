@@ -8,10 +8,10 @@
   body {
     @apply overflow-x-hidden;
     @apply scroll-smooth;
-    @apply min-h-screen;
+    @apply min-h-dvh;
   }
   #root {
-    @apply min-h-screen;
+    @apply min-h-dvh;
   }
   a {
     @apply transition-colors;
@@ -35,7 +35,7 @@
     @apply w-screen md:w-[calc(100vw-15rem)] custom-min-h-screen;
   }
   .custom-nav {
-    @apply fixed h-screen md:h-[calc(100vh-4rem)] top-0 md:top-[4rem];
+    @apply fixed h-dvh md:h-[calc(100vh-4rem)] top-0 md:top-[4rem];
   }
 }
 
@@ -75,10 +75,10 @@
 
 @layer utilities {
   .custom-min-h-screen {
-    @apply min-h-[calc(100vh-4rem)];
+    @apply min-h-[calc(100dvh-4rem)];
   }
-}
 
-.blur-bg {
-  background-color: rgba(0, 0, 0, 0.8);
+  .blur-bg {
+    @apply bg-black/80;
+  }
 }
