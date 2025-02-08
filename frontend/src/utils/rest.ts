@@ -1,7 +1,7 @@
 import { http } from '@/utils/axios';
-import { DEFAULT_HEADERS, DEVICES_ROUTE, WAKE_ROUTE } from '@/config';
+import { DEFAULT_HEADERS, DEVICES_ROUTE, WAKE_ROUTE, EVENTS_ROUTE } from '@/config';
 import { AxiosResponse } from 'axios';
-import { IBaseDevice, IDevice, IDeviceList, IGenericDataRes, IWakeReq } from '@/types';
+import { IBaseDevice, IDevice, IDeviceList, IEventList, IGenericDataRes, IWakeReq } from '@/types';
 
 // This functions are just used to wrap specific REST API calls
 // Not using try/catch statement here so every specific component
@@ -45,6 +45,14 @@ class RESTManager {
       headers: DEFAULT_HEADERS,
       blob: false,
     }).post<IGenericDataRes>(WAKE_ROUTE.BASE, data);
+    return res;
+  }
+
+  async getEvents(): Promise<AxiosResponse<IEventList>> {
+    const res = await http({
+      headers: DEFAULT_HEADERS,
+      blob: false,
+    }).get<IEventList>(EVENTS_ROUTE.BASE);
     return res;
   }
 }

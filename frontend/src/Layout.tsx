@@ -2,14 +2,14 @@ import { ReactNode, createRef, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import { useWindowSize } from '@uidotdev/usehooks';
-import { MdOutlineDevices, MdDarkMode, MdLightMode } from 'react-icons/md';
+import { MdOutlineDevices, MdOutlineTableRows, MdDarkMode, MdLightMode } from 'react-icons/md';
 import { PiListBold } from 'react-icons/pi';
 
 // Local imports
 import { useTheme } from '@/context';
 import { INavLink, Theme } from '@/types';
 import Logo from '@/assets/logo.png';
-import { useOnClickOutside } from './utils/hooks';
+import { useOnClickOutside } from '@/utils/hooks';
 
 const navbarIconSize = 28;
 const navlinks: INavLink[] = [
@@ -17,6 +17,11 @@ const navlinks: INavLink[] = [
     link: '/',
     innerTxt: 'Devices',
     icon: <MdOutlineDevices size={navbarIconSize} />,
+  },
+  {
+    link: '/events',
+    innerTxt: 'Events',
+    icon: <MdOutlineTableRows size={navbarIconSize} />,
   },
 ];
 

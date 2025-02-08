@@ -3,6 +3,12 @@ export enum Theme {
   Light = 'light',
 }
 
+export enum EventType {
+  WAKE = 'wake',
+  DEVICE_ADDED = 'device_added',
+  DEVICE_REMOVED = 'device_removed',
+}
+
 export interface INavLink {
   link: string;
   innerTxt: string;
@@ -28,4 +34,15 @@ export interface IDeviceList {
 
 export interface IWakeReq {
   deviceId: string;
+}
+
+export interface IEvent {
+  id: string;
+  eventType: EventType;
+  eventData: string;
+  timestamp: string;
+}
+
+export interface IEventList {
+  events: IEvent[];
 }
