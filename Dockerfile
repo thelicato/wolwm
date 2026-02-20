@@ -4,7 +4,7 @@
 FROM node:20.13.1-slim AS frontend-builder
 WORKDIR /usr/src/app/frontend
 COPY ./frontend .
-RUN yarn install && yarn build
+RUN npm install && npm run build
 
 #################################################################
 # Step 2: Build the backend                                      #
