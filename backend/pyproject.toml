@@ -10,7 +10,8 @@ packages = [{include = "wolwm"}]
 python = "^3.11"
 typer = {extras = ["all"], version = "^0.12.3"}
 gevent = "^24.2.1"
-fastapi = "^0.111.0"
+fastapi = "^0.116.0"
+starlette = ">=0.47.2,<1.0.0"
 uvicorn = "^0.29.0"
 structlog = "^24.1.0"
 requests = "^2.31.0"
