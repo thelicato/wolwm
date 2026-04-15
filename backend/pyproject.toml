@@ -8,14 +8,14 @@ packages = [{include = "wolwm"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-typer = {extras = ["all"], version = "^0.12.3"}
-gevent = "^24.2.1"
-fastapi = "^0.120.0"
+typer = {extras = ["all"], version = "^0.24.1"}
+gevent = "^26.4.0"
+fastapi = "^0.135.3"
 starlette = ">=0.49.1,<1.0.0"
-uvicorn = "^0.29.0"
-structlog = "^24.1.0"
-requests = "^2.31.0"
-sqlalchemy = "^2.0.30"
+uvicorn = "^0.44.0"
+structlog = "^25.5.0"
+requests = "^2.33.1"
+sqlalchemy = "^2.0.49"
 pyhumps = "^3.8.0"
 backoff = "^2.2.1"
 wakeonlan = "^3.1.0"
