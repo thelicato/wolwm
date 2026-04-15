@@ -1,7 +1,7 @@
 #################################################################
 # Step 1: Build the frontend                                    #
 #################################################################
-FROM node:20.13.1-slim AS frontend-builder
+FROM node:22-slim AS frontend-builder
 WORKDIR /usr/src/app/frontend
 COPY ./frontend .
 RUN npm install && npm run build
