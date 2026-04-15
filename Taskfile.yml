@@ -12,7 +12,7 @@ tasks:
 
   install_backend:
     cmds:
-      - poetry -C backend install
+      - cd backend && uv sync
     sources:
       - backend/wolwm/**/*.py
 
@@ -24,7 +24,7 @@ tasks:
   backend:
     deps: [install_backend]
     cmds:
-      - poetry -C backend run wolwm -dev -v
+      - cd backend && uv run wolwm -- -dev -v
 
   dev:
     deps: [install_backend, install_frontend]
@@ -33,7 +33,7 @@ tasks:
       - tmux split-window -h -t wolwm-dev
 
       # Send commands to each pane
-      - tmux send-keys -t wolwm-dev:0.0 'poetry -C backend run wolwm -dev -v' C-m
+      - tmux send-keys -t wolwm-dev:0.0 'cd backend && uv run wolwm -- -dev -v' C-m
       - tmux send-keys -t wolwm-dev:0.1 'cd frontend && npm run dev' C-m
 
       # Attach to the session
@@ -44,4 +44,4 @@ tasks:
     cmds:
       - cd frontend && npm run build
       - rm -rf ./backend/wolwm/ui; mv ./frontend/dist ./backend/wolwm/ui
-      - cd backend && poetry build
+      - cd backend && uv build
