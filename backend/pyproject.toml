@@ -1,6 +1,6 @@
 [project]
 name = "wolwm"
-version = "0.1.6"
+version = "0.1.7"
 description = ""
 authors = [
     { name = "thelicato", email = "thelicato@duck.com" }
