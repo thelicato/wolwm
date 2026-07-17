@@ -6,10 +6,6 @@ Description: Wake-On-LAN Web Manager
 import sys
 import os
 from importlib import metadata
-from gevent import monkey
-
-# Perform monkey patching
-# monkey.patch_all()
 
 # Project Info
 __title__ = "wolwm"
