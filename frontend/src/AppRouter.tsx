@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Layout } from '@/Layout';
 import { Devices, NoMatch, Error, Events } from '@/views';
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router';
 import { INFO } from '@/config';
 
 const NoMatchElement = () => {

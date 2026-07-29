@@ -1,5 +1,5 @@
 import { ReactNode, createRef, useMemo, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import Tippy from '@tippyjs/react';
 import { useWindowSize } from '@uidotdev/usehooks';
 import { MdOutlineDevices, MdOutlineTableRows, MdDarkMode, MdLightMode } from 'react-icons/md';

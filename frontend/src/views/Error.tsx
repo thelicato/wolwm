@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import ErrorImg from '@/assets/generic_error.png';
 
 export const Error = () => {

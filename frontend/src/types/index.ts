@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 export enum Theme {
   Dark = 'dark',
   Light = 'light',
@@ -12,7 +14,7 @@ export enum EventType {
 export interface INavLink {
   link: string;
   innerTxt: string;
-  icon: JSX.Element;
+  icon: ReactElement;
 }
 
 export interface IGenericDataRes {

@@ -1,5 +1,5 @@
 import AppRouter from '@/AppRouter';
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router/dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '@/context';
 import 'tippy.js/dist/tippy.css';

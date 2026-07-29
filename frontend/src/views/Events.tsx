@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { type ReactElement, useEffect, useMemo, useState } from 'react';
 import {
   ColumnDef,
   PaginationState,
@@ -26,7 +26,7 @@ import { Loading } from '@/components';
 
 const EVENT_TYPE_CLASSNAMES = 'rounded-md text-white p-[4px] text-nowrap';
 
-const EVENT_TYPE_MAPPINGS: { [key in EventType]: JSX.Element } = {
+const EVENT_TYPE_MAPPINGS: { [key in EventType]: ReactElement } = {
   [EventType.DEVICE_ADDED]: (
     <span className={`${EVENT_TYPE_CLASSNAMES} bg-teal-500`}>DEVICE ADDED</span>
   ),
