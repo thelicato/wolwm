@@ -2,6 +2,10 @@
 Main Entrypoint
 """
 
+# Standard library imports
+import asyncio
+from contextlib import asynccontextmanager, suppress
+
 # External library imports
 import fastapi
 import typer
@@ -10,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from uvicorn.config import LOGGING_CONFIG
 
 # Local application imports
-from wolwm import __version__, types, db
+from wolwm import __version__, db, services, types
 from wolwm.log import logger, formatter
 from wolwm.utils import helper
 from wolwm.api.rest import router
@@ -20,6 +24,26 @@ app = typer.Typer(
     add_completion=False,
     context_settings={"help_option_names": ["-h", "--help"]},
 )
+
+
+@asynccontextmanager
+async def application_lifespan(application: fastapi.FastAPI):
+    """Initialize storage and run the persistent wake scheduler."""
+
+    helper.setup_folders()
+    db.init_db()
+
+    async with formatter.configure_logging(application):
+        scheduler_task = asyncio.create_task(
+            services.schedules.run_scheduler(),
+            name="wolwm-scheduled-wakes",
+        )
+        try:
+            yield
+        finally:
+            scheduler_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await scheduler_task
 
 
 def create_app(deploy_mode: types.enum.DeployMode) -> fastapi.FastAPI:
@@ -33,7 +57,7 @@ def create_app(deploy_mode: types.enum.DeployMode) -> fastapi.FastAPI:
         docs_url=docs_url,
         redoc_url=redoc_url,
         openapi_url=openapi_url,
-        lifespan=formatter.configure_logging,
+        lifespan=application_lifespan,
     )
 
     application.mount(
@@ -97,12 +121,6 @@ def run(
     logger.bold(f"Starting on {host}:{port}")
     if verbose:
         logger.bold("Verbose mode on")
-
-    # Check that the needed folders are ok
-    helper.setup_folders()
-
-    # Init DB
-    db.init_db()
 
     deploy_mode = types.enum.DeployMode.DEV if dev else types.enum.DeployMode.PROD
 

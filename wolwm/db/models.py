@@ -6,7 +6,7 @@ Module for DB models
 from uuid import uuid4
 
 # External library imports
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.orm import declarative_base
 
 
@@ -32,3 +32,18 @@ class Event(Base):
     event_type = Column(String)
     event_data = Column(String)
     timestamp = Column(DateTime)
+
+
+class WakeSchedule(Base):
+    """SQLAlchemy class for persistent wake-up schedules."""
+
+    __tablename__ = "wake_schedules"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    device_id = Column(String(36), nullable=False, index=True)
+    next_run_at = Column(DateTime, nullable=True, index=True)
+    frequency = Column(String, nullable=False)
+    timezone = Column(String, nullable=False)
+    enabled = Column(Boolean, nullable=False, default=True)
+    last_run_at = Column(DateTime, nullable=True)
+    last_error = Column(String, nullable=True)

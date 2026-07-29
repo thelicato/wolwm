@@ -70,6 +70,37 @@
     }
   };
 
+  const localDateTimeValue = (date) => {
+    const offset = date.getTimezoneOffset() * 60_000;
+    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+  };
+
+  const prepareScheduleForm = (form) => {
+    const timezoneInput = form.querySelector("[data-timezone-input]");
+    const timezoneLabel = form.querySelector("[data-timezone-label]");
+    const scheduleTime = form.querySelector("[data-schedule-time]");
+    const timezone =
+      Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+
+    if (timezoneInput) {
+      timezoneInput.value = timezone;
+    }
+    if (timezoneLabel) {
+      timezoneLabel.textContent = timezone;
+    }
+    if (scheduleTime) {
+      const now = new Date();
+      scheduleTime.min = localDateTimeValue(now);
+      if (!scheduleTime.value) {
+        scheduleTime.value = localDateTimeValue(
+          new Date(now.getTime() + 5 * 60_000),
+        );
+      }
+    }
+  };
+
+  document.querySelectorAll("[data-schedule-form]").forEach(prepareScheduleForm);
+
   document.querySelectorAll("[data-open-dialog]").forEach((button) => {
     button.addEventListener("click", () => {
       const dialog = document.getElementById(button.dataset.openDialog);
@@ -86,6 +117,10 @@
 
       dialog.showModal();
       setDialogState(dialog, true);
+      const scheduleForm = dialog.querySelector("[data-schedule-form]");
+      if (scheduleForm) {
+        prepareScheduleForm(scheduleForm);
+      }
     });
   });
 

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% import "_icons.html" as icons %}
+
+{% block content %}
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <h1>Schedules</h1>
+      <p>Wake devices automatically at a local date and time.</p>
+    </div>
+    <button
+      class="button button--primary"
+      type="button"
+      data-open-dialog="add-schedule-dialog"
+      {% if not devices %}disabled{% endif %}
+    >
+      Add Schedule
+    </button>
+  </div>
+
+  {% if not devices %}
+  <div class="warning-banner">
+    {{ icons.warning() }}
+    <p>Add a device before creating a wake-up schedule.</p>
+  </div>
+  {% endif %}
+
+  {% if schedule_rows %}
+  <div class="event-table-scroll">
+    <table class="event-table schedule-table">
+      <thead>
+        <tr>
+          <th>Device</th>
+          <th>Next wake</th>
+          <th>Repeats</th>
+          <th>Time zone</th>
+          <th>Status</th>
+          <th><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in schedule_rows %}
+        {% set schedule = row.schedule %}
+        <tr>
+          <td>
+            <strong>{{ row.device.name if row.device else "Removed device" }}</strong>
+            {% if row.device %}<small>{{ row.device.mac.upper() }}</small>{% endif %}
+          </td>
+          <td>{{ row.next_run }}</td>
+          <td>{{ frequency_labels.get(schedule.frequency, schedule.frequency|title) }}</td>
+          <td>{{ schedule.timezone }}</td>
+          <td>
+            {% if schedule.last_error %}
+              <span class="schedule-status schedule-status--failed" title="{{ schedule.last_error }}">Failed</span>
+            {% elif schedule.enabled %}
+              <span class="schedule-status schedule-status--active">Scheduled</span>
+            {% else %}
+              <span class="schedule-status schedule-status--complete">Completed</span>
+            {% endif %}
+          </td>
+          <td>
+            <button
+              class="button button--danger button--small"
+              type="button"
+              data-open-dialog="delete-schedule-dialog"
+              data-delete-action="/ui/schedules/{{ schedule.id }}/delete"
+              aria-label="Remove schedule for {{ row.device.name if row.device else 'device' }}"
+            >
+              Remove
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state schedule-empty">
+    {{ icons.calendar() }}
+    <h2>No Schedules</h2>
+    <p>Your scheduled wake-ups will appear here.</p>
+  </div>
+  {% endif %}
+</section>
+
+<dialog class="modal modal--normal" id="add-schedule-dialog">
+  <div class="modal-panel">
+    <div class="modal-heading">
+      <h2>Add Schedule</h2>
+      <span class="escape-hint">ESC</span>
+      <button class="modal-close" type="button" data-close-dialog aria-label="Close">
+        {{ icons.close() }}
+      </button>
+    </div>
+
+    <form
+      action="/ui/schedules"
+      method="post"
+      class="device-form schedule-form"
+      data-add-form
+      data-schedule-form
+      data-loading-form
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="timezone" value="UTC" data-timezone-input>
+
+      <label for="schedule-device">Device</label>
+      <select id="schedule-device" name="device_id" required>
+        <option value="" selected disabled>Select a device</option>
+        {% for device in devices %}
+        <option value="{{ device.id }}">{{ device.name }} · {{ device.mac.upper() }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="schedule-time">Date and time</label>
+      <input
+        id="schedule-time"
+        name="scheduled_for"
+        type="datetime-local"
+        required
+        data-schedule-time
+      >
+
+      <label for="schedule-frequency">Repeat</label>
+      <select id="schedule-frequency" name="frequency" required>
+        <option value="once">Once</option>
+        <option value="daily">Daily</option>
+        <option value="weekdays">Weekdays</option>
+        <option value="weekly">Weekly</option>
+      </select>
+
+      <p class="schedule-timezone">
+        Time zone: <strong data-timezone-label>UTC</strong>
+      </p>
+
+      <button class="button button--primary add-submit" type="submit" disabled>
+        Add Schedule
+      </button>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="modal modal--normal" id="delete-schedule-dialog">
+  <div class="modal-panel">
+    <div class="modal-heading">
+      <h2>Remove Schedule</h2>
+      <span class="escape-hint">ESC</span>
+      <button class="modal-close" type="button" data-close-dialog aria-label="Close">
+        {{ icons.close() }}
+      </button>
+    </div>
+
+    <h3 class="confirm-title">Are you sure?</h3>
+    <form method="post" class="confirm-actions" data-delete-form data-loading-form>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="button button--confirm" type="submit">Confirm</button>
+      <button class="button button--danger button--compact" type="button" data-close-dialog>
+        Cancel
+      </button>
+    </form>
+  </div>
+</dialog>
+{% endblock %}

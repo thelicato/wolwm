@@ -6,7 +6,7 @@ This modules contains all the db Pydantic types
 from datetime import datetime
 
 # Local application imports
-from wolwm.types.common import Device, Event
+from wolwm.types.common import Device, Event, WakeSchedule
 
 class DBDevice(Device):
     """Class for storing a device in the DB"""
@@ -29,5 +29,14 @@ class DBEvent(Event):
         Needed to create the class from SQLAlchemy
         ref: https://docs.pydantic.dev/latest/concepts/models/#arbitrary-class-instances
         """
+
+        from_attributes = True
+
+
+class DBWakeSchedule(WakeSchedule):
+    """Class for storing a wake-up schedule in the DB."""
+
+    class Config:
+        """Allow validation from SQLAlchemy model instances."""
 
         from_attributes = True

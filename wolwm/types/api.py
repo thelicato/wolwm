@@ -3,11 +3,13 @@ This modules contains all the Pydantic types for the REST APIs
 """
 
 # Standard library imports
+from datetime import datetime
 from typing import List
 
 # Local application imports
 from wolwm.types.base import CamelModel
-from wolwm.types.common import BaseDevice, Device, Event
+from wolwm.types.common import BaseDevice, Device, Event, WakeSchedule
+from wolwm.types.enum import ScheduleFrequency
 
 ############################
 # Generic and common types #
@@ -86,3 +88,22 @@ class EventsRes(CamelModel):
     """Class for get events response data"""
 
     events: List[Event]
+
+
+###################################
+# Types for /schedules REST API   #
+###################################
+
+class CreateWakeScheduleReq(CamelModel):
+    """Request data for a persistent wake-up schedule."""
+
+    device_id: str
+    scheduled_for: datetime
+    frequency: ScheduleFrequency = ScheduleFrequency.ONCE
+    timezone: str = "UTC"
+
+
+class WakeSchedulesRes(CamelModel):
+    """Response containing all wake-up schedules."""
+
+    schedules: List[WakeSchedule]

@@ -13,6 +13,7 @@
 
 - 🌐 **Web-based Interface** – No need for CLI commands; manage Wake-on-LAN from a browser.
 - ⚡ **Send Magic Packets** – Wake up devices remotely with a single click.
+- 🗓️ **Scheduled Wake-ups** – Create one-time, daily, weekday, or weekly wake schedules in your local time zone.
 - 📋 **Device Management** – Save and manage multiple devices for quick access.
 - 🔄 **Logging & History** – Track which devices were woken up and when.
 
@@ -43,8 +44,8 @@
 ## 🚀 Usage
 
 1. Open your browser and navigate to `http://localhost:5000`
-2. Add your device(s) by specifying their MAC address and network broadcast IP.
-3. Click "Wake" to send a magic packet!
+2. Add your device(s) by specifying a name and MAC address.
+3. Click "Wake" to send a magic packet immediately, or open **Schedules** to automate it.
 
 
 ## 📷 Screenshots
@@ -72,8 +73,7 @@ Wake-on-LAN (WoL) is a networking standard that allows you to remotely wake up a
 
 ## 🏗️ Future Improvements
 
-- Scheduled wake-ups & shutdowns.
-- Add authentication
+- Add authentication.
 
 ## 📜 License
 

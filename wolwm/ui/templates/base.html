@@ -59,6 +59,17 @@
             </li>
             <li>
               <a
+                href="/ui/schedules"
+                class="nav-link{% if active_page == 'schedules' %} is-active{% endif %}"
+                {% if active_page == "schedules" %}aria-current="page"{% endif %}
+                title="Schedules"
+              >
+                {{ icons.calendar() }}
+                <span>Schedules</span>
+              </a>
+            </li>
+            <li>
+              <a
                 href="/ui/events"
                 class="nav-link{% if active_page == 'events' %} is-active{% endif %}"
                 {% if active_page == "events" %}aria-current="page"{% endif %}

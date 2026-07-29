@@ -10,6 +10,12 @@
 </svg>
 {%- endmacro %}
 
+{% macro calendar(class_name="icon") -%}
+<svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M7 2h2v2h6V2h2v2h2a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h2V2Zm12 8H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Zm1 7h3v3H7v-3Z"/>
+</svg>
+{%- endmacro %}
+
 {% macro moon(class_name="icon") -%}
 <svg class="{{ class_name }}" viewBox="0 0 24 24" aria-hidden="true">
   <path d="M20.4 15.5A8.5 8.5 0 0 1 8.5 3.6 9 9 0 1 0 20.4 15.5Z"/>
