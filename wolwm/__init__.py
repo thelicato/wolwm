@@ -9,7 +9,7 @@ from importlib import metadata
 
 # Project Info
 __title__ = "wolwm"
-__version__ = "0.1.9"
+__version__ = "0.2.0"
 __description__ = (
     "Wake-On-LAN Web Manager"
 )
