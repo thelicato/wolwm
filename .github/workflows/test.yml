@@ -31,7 +31,7 @@ jobs:
         run: task build
 
       - name: Install wolwm
-        run: pip install backend/dist/wolwm*.whl
+        run: pip install dist/wolwm*.whl
 
       - name: Run wolwm
         run: |

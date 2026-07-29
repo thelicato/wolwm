@@ -1,3 +1,26 @@
+# OS and editor files
 .DS_Store
-.task
-wolwm_data
+.task/
+
+# Local application data
+wolwm_data/
+control
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+.env
+
+# Builds and package metadata
+build/
+dist/
+*.egg-info/
+
+# Test and analysis caches
+.coverage
+.coverage.*
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/

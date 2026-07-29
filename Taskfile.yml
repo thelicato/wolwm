@@ -1,8 +1,7 @@
 version: "3"
 
 tasks:
-  install_backend:
-    dir: backend
+  install:
     cmds:
       - uv sync
     sources:
@@ -11,20 +10,12 @@ tasks:
       - wolwm/**/*.py
       - wolwm/ui/**/*
 
-  backend:
-    deps: [install_backend]
-    dir: backend
-    cmds:
-      - uv run wolwm -dev -v
-
   dev:
-    deps: [install_backend]
-    dir: backend
+    deps: [install]
     cmds:
       - uv run wolwm -dev -v
 
   build:
-    deps: [install_backend]
-    dir: backend
+    deps: [install]
     cmds:
       - uv build
