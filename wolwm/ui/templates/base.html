@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1f2937">
     <title>{{ title }} · wolwm</title>
-    <link rel="icon" href="{{ request.url_for('ui-static', path='favicon.ico') }}">
-    <link rel="manifest" href="{{ request.url_for('ui-static', path='manifest.json') }}">
-    <link rel="stylesheet" href="{{ request.url_for('ui-static', path='app.css') }}">
-    <script src="{{ request.url_for('ui-static', path='app.js') }}" defer></script>
+    <link rel="icon" href="/ui/static/favicon.ico">
+    <link rel="manifest" href="/ui/static/manifest.json">
+    <link rel="stylesheet" href="/ui/static/app.css">
+    <script src="/ui/static/app.js" defer></script>
   </head>
   <body>
     <header class="app-header">
       <a class="brand" href="/ui/" aria-label="wolwm home">
-        <img src="{{ request.url_for('ui-static', path='logo.png') }}" alt="">
+        <img src="/ui/static/logo.png" alt="">
         <span>wolwm</span>
       </a>
 
