@@ -4,7 +4,7 @@
 FROM node:22-slim AS frontend-builder
 WORKDIR /usr/src/app/frontend
 COPY ./frontend .
-RUN npm install && npm run build
+RUN npm ci && npm run build
 
 #################################################################
 # Step 2: Build the backend                                      #
@@ -15,7 +15,9 @@ COPY ./backend .
 COPY --from=frontend-builder /usr/src/app/frontend/dist ./wolwm/ui
 
 RUN python -m pip install --upgrade pip && python -m pip install uv
-RUN uv build
+RUN uv build --wheel --out-dir /tmp/wolwm-dist --clear && \
+    uv export --quiet --locked --no-dev --no-emit-project --format requirements.txt \
+      --output-file /tmp/wolwm-dist/requirements.txt
 
 #################################################################
 # Step 3: Pack everything                                       #
@@ -23,8 +25,11 @@ RUN uv build
 FROM python:3.11.9-slim
 
 # Copy assets
-COPY --from=backend-builder /usr/src/app/backend/dist/*.whl .
+COPY --from=backend-builder /tmp/wolwm-dist /tmp/wolwm-dist
 
-RUN python -m pip install --upgrade pip && python -m pip install ./*.whl && rm ./*.whl
+RUN python -m pip install --upgrade pip && \
+    python -m pip install --require-hashes -r /tmp/wolwm-dist/requirements.txt && \
+    python -m pip install --no-deps /tmp/wolwm-dist/*.whl && \
+    rm -rf /tmp/wolwm-dist
 
 ENTRYPOINT ["wolwm"]
