@@ -7,16 +7,16 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "typer>=0.24.1,<0.25.0",
-    "fastapi>=0.136.3,<0.137.0",
-    "starlette>=1.3.1,<2.0.0",
-    "uvicorn>=0.44.0,<0.45.0",
-    "structlog>=25.5.0,<26.0.0",
-    "sqlalchemy>=2.0.49,<2.1.0",
-    "idna>=3.15,<4.0.0",
-    "wakeonlan>=3.1.0,<4.0.0",
-    "jinja2>=3.1.6,<4.0.0",
-    "python-multipart>=0.0.22,<1.0.0",
+    "typer==0.24.2",
+    "fastapi==0.136.3",
+    "starlette==1.3.1",
+    "uvicorn==0.44.0",
+    "structlog==25.5.0",
+    "sqlalchemy==2.0.50",
+    "idna==3.18",
+    "wakeonlan==3.3.0",
+    "jinja2==3.1.6",
+    "python-multipart==0.0.32",
 ]
 
 [project.scripts]
@@ -33,5 +33,5 @@ where = ["."]
 include = ["wolwm*"]
 
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools==83.0.0", "wheel==0.47.0"]
 build-backend = "setuptools.build_meta"
