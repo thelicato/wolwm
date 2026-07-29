@@ -1,18 +1,9 @@
 #################################################################
-# Step 1: Build the frontend                                    #
-#################################################################
-FROM node:22-slim AS frontend-builder
-WORKDIR /usr/src/app/frontend
-COPY ./frontend .
-RUN npm ci && npm run build
-
-#################################################################
-# Step 2: Build the backend                                      #
+# Step 1: Build the Python package                               #
 #################################################################
 FROM python:3.11.9-slim AS backend-builder
 WORKDIR /usr/src/app/backend
 COPY ./backend .
-COPY --from=frontend-builder /usr/src/app/frontend/dist ./wolwm/ui
 
 RUN python -m pip install --upgrade pip && python -m pip install uv
 RUN uv build --wheel --out-dir /tmp/wolwm-dist --clear && \
@@ -20,7 +11,7 @@ RUN uv build --wheel --out-dir /tmp/wolwm-dist --clear && \
       --output-file /tmp/wolwm-dist/requirements.txt
 
 #################################################################
-# Step 3: Pack everything                                       #
+# Step 2: Install the application                               #
 #################################################################
 FROM python:3.11.9-slim
 

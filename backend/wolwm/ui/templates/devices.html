@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% import "_icons.html" as icons %}
+
+{% block content %}
+<section class="page">
+  <h1>Devices</h1>
+
+  <div class="warning-banner">
+    {{ icons.warning() }}
+    <p>
+      You cannot send multiple wake commands to the same device in a
+      <strong>short amount of time</strong> as it will result in an
+      <strong>error</strong>.
+    </p>
+  </div>
+
+  <div class="device-grid">
+    {% for device in devices %}
+    <article class="device-card">
+      <h2>{{ device.name }}</h2>
+      <p><strong>MAC Address:</strong> {{ device.mac.upper() }}</p>
+      <div class="device-actions">
+        <form action="/ui/devices/{{ device.id }}/wake" method="post" data-loading-form>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="button button--primary" type="submit">Wake</button>
+        </form>
+        <button
+          class="button button--danger"
+          type="button"
+          data-open-dialog="delete-device-dialog"
+          data-delete-action="/ui/devices/{{ device.id }}/delete"
+        >
+          Remove
+        </button>
+      </div>
+    </article>
+    {% endfor %}
+
+    <button
+      class="device-card add-device-card"
+      type="button"
+      data-open-dialog="add-device-dialog"
+    >
+      <span class="add-device-plus">+</span>
+      <span class="add-device-label">Add Device</span>
+    </button>
+  </div>
+</section>
+
+<dialog class="modal modal--large" id="add-device-dialog">
+  <div class="modal-panel">
+    <div class="modal-heading">
+      <h2>Add Device</h2>
+      <span class="escape-hint">ESC</span>
+      <button class="modal-close" type="button" data-close-dialog aria-label="Close">
+        {{ icons.close() }}
+      </button>
+    </div>
+
+    <form action="/ui/devices" method="post" class="device-form" data-add-form data-loading-form>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="warning-banner warning-banner--form">
+        {{ icons.warning() }}
+        <p>The only format allowed for the MAC address is</p>
+        <code>FF:FF:FF:FF:FF:FF</code>
+      </div>
+
+      <label for="device-name">Name</label>
+      <input
+        id="device-name"
+        name="name"
+        type="text"
+        maxlength="100"
+        placeholder="Device Name"
+        autocomplete="off"
+        required
+      >
+
+      <label for="device-mac">MAC Address</label>
+      <input
+        id="device-mac"
+        name="mac"
+        type="text"
+        maxlength="17"
+        pattern="([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})"
+        placeholder="MAC Address"
+        autocomplete="off"
+        required
+      >
+
+      <button class="button button--primary add-submit" type="submit" disabled>
+        Add Device
+      </button>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="modal modal--normal" id="delete-device-dialog">
+  <div class="modal-panel">
+    <div class="modal-heading">
+      <h2>Delete Device</h2>
+      <span class="escape-hint">ESC</span>
+      <button class="modal-close" type="button" data-close-dialog aria-label="Close">
+        {{ icons.close() }}
+      </button>
+    </div>
+
+    <h3 class="confirm-title">Are you sure?</h3>
+    <form method="post" class="confirm-actions" data-delete-form data-loading-form>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="button button--confirm" type="submit">Confirm</button>
+      <button class="button button--danger button--compact" type="button" data-close-dialog>
+        Cancel
+      </button>
+    </form>
+  </div>
+</dialog>
+{% endblock %}

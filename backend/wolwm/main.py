@@ -3,32 +3,94 @@ Main Entrypoint
 """
 
 # External library imports
-import uvicorn
 import fastapi
-from uvicorn.config import LOGGING_CONFIG
-from fastapi.middleware.cors import CORSMiddleware
-
-# External library imports
 import typer
+import uvicorn
+from fastapi.staticfiles import StaticFiles
+from uvicorn.config import LOGGING_CONFIG
 
 # Local application imports
 from wolwm import __version__, types, db
 from wolwm.log import logger, formatter
 from wolwm.utils import helper
 from wolwm.api.rest import router
-from wolwm.api.static import ui
+from wolwm.api.static import UI_STATIC_DIR, ui
 
-app = typer.Typer(add_completion=False, context_settings={"help_option_names": ["-h", "--help"]})
+app = typer.Typer(
+    add_completion=False,
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
+
+
+def create_app(deploy_mode: types.enum.DeployMode) -> fastapi.FastAPI:
+    """Create the FastAPI application for development or production."""
+
+    docs_url = None if deploy_mode == types.enum.DeployMode.PROD else "/docs"
+    redoc_url = None if deploy_mode == types.enum.DeployMode.PROD else "/redoc"
+    openapi_url = None if deploy_mode == types.enum.DeployMode.PROD else "/openapi.json"
+
+    application = fastapi.FastAPI(
+        docs_url=docs_url,
+        redoc_url=redoc_url,
+        openapi_url=openapi_url,
+        lifespan=formatter.configure_logging,
+    )
+
+    application.mount(
+        "/ui/static",
+        StaticFiles(directory=str(UI_STATIC_DIR)),
+        name="ui-static",
+    )
+    application.include_router(ui)
+    application.include_router(router)
+
+    @application.middleware("http")
+    async def add_security_headers(request, call_next):
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "base-uri 'none'; "
+            "font-src 'self'; "
+            "form-action 'self'; "
+            "frame-ancestors 'none'; "
+            "img-src 'self'; "
+            "manifest-src 'self'; "
+            "script-src 'self'; "
+            "style-src 'self'"
+        )
+        response.headers["Permissions-Policy"] = (
+            "camera=(), geolocation=(), microphone=()"
+        )
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        return response
+
+    return application
+
 
 @app.command()
 def run(
-        host: str = typer.Option(
-            "127.0.0.1", "--host", "-h", help="Host for API server (e.g. '0.0.0.0')"
-        ),
-        port: int = typer.Option(5000, "--port", "-p", help="Port for API server"),
-        verbose: bool = typer.Option(False, "--verbose", "-v", help="Display verbose output"),
-        dev: bool = typer.Option(False, "--development", "-dev", help="Start in dev mode")
-    ) -> None:
+    host: str = typer.Option(
+        "127.0.0.1",
+        "--host",
+        "-h",
+        help="Host for API server (e.g. '0.0.0.0')",
+    ),
+    port: int = typer.Option(5000, "--port", "-p", help="Port for API server"),
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Display verbose output",
+    ),
+    dev: bool = typer.Option(
+        False,
+        "--development",
+        "-dev",
+        help="Start in dev mode",
+    ),
+) -> None:
     """This method starts the FastAPI server"""
 
     # Init logger
@@ -44,39 +106,17 @@ def run(
 
     deploy_mode = types.enum.DeployMode.DEV if dev else types.enum.DeployMode.PROD
 
-
     # Starting API
     logger.init(verbose, "server")
 
-    docs_url = None if deploy_mode == types.enum.DeployMode.PROD else "/docs"
-    redoc_url = None if deploy_mode == types.enum.DeployMode.PROD else "/redoc"
-    openapi_url = None if deploy_mode == types.enum.DeployMode.PROD else "/openapi.json"
-
-    app = fastapi.FastAPI(
-        docs_url=docs_url,
-        redoc_url=redoc_url,
-        openapi_url=openapi_url,
-        lifespan=formatter.configure_logging,
-    )
-
-    # Serve static files if in 'production'
-    if deploy_mode == types.enum.DeployMode.PROD:
-        app.include_router(ui)
-
-    app.include_router(router)
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    fastapi_app = create_app(deploy_mode)
 
     # Load server
     logger.info(f"wolwm v{__version__} is running on {host}:{port}")
     log_config = LOGGING_CONFIG
     del log_config["loggers"]["uvicorn"]
-    uvicorn.run(app, host=host, port=port)
+    uvicorn.run(fastapi_app, host=host, port=port)
+
 
 def main() -> None:
     """The main entrypoint"""
@@ -85,4 +125,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()    
+    main()

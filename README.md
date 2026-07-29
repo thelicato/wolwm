@@ -7,7 +7,7 @@
   <br /><br/>
 </div>
 
-**WOLWM (Wake-on-LAN Web Manager)** is an easy-to-use web application that allows you to remotely wake up devices on your local network using **Wake-on-LAN (WoL) magic packets**. With a clean UI and simple configuration, WOLWM makes it effortless to bring your computers online from anywhere.
+**WOLWM (Wake-on-LAN Web Manager)** is an easy-to-use web application that allows you to remotely wake up devices on your local network using **Wake-on-LAN (WoL) magic packets**. Its web interface is rendered directly by the Python backend, with no Node.js build toolchain or frontend framework.
 
 ## 🎯 Features
 
@@ -35,14 +35,14 @@
    ```sh
    git clone https://github.com/thelicato/wolwm.git && cd wolwm
    ```
-2. Run in dev mode:
+2. Run in development mode:
    ```sh
-   task dev # You have to install all the dev requirements
+   task dev
    ```
 
 ## 🚀 Usage
 
-1. Open your browser and navigate to `http://localhost:5000` (or `http://localhost:5173` if running in dev mode)
+1. Open your browser and navigate to `http://localhost:5000`
 2. Add your device(s) by specifying their MAC address and network broadcast IP.
 3. Click "Wake" to send a magic packet!
 
