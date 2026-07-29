@@ -20,9 +20,20 @@
       <h2>{{ device.name }}</h2>
       <p><strong>MAC Address:</strong> {{ device.mac.upper() }}</p>
       <div class="device-actions">
-        <form action="/ui/devices/{{ device.id }}/wake" method="post" data-loading-form>
+        <form
+          action="/ui/devices/{{ device.id }}/wake"
+          method="post"
+          data-wake-form
+          data-device-id="{{ device.id }}"
+          data-cooldown-url="/api/v1/wake/{{ device.id }}/cooldown"
+        >
           <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-          <button class="button button--primary" type="submit">Wake</button>
+          <button
+            class="button button--primary"
+            type="submit"
+            data-wake-button
+            disabled
+          >Wake</button>
         </form>
         <button
           class="button button--danger"

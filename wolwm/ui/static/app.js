@@ -148,10 +148,128 @@
   });
 
   const toast = document.querySelector("[data-toast-visible]");
+  let toastHideTimer;
   if (toast) {
     window.setTimeout(() => toast.classList.add("is-visible"), 30);
-    window.setTimeout(() => toast.classList.remove("is-visible"), 3400);
+    toastHideTimer = window.setTimeout(
+      () => toast.classList.remove("is-visible"),
+      3400,
+    );
   }
+
+  const showToast = (message, kind = "success") => {
+    if (!toast) {
+      return;
+    }
+    window.clearTimeout(toastHideTimer);
+    toast.textContent = message;
+    toast.classList.toggle("toast--error", kind === "error");
+    toast.classList.toggle("toast--success", kind !== "error");
+    toast.classList.add("is-visible");
+    toastHideTimer = window.setTimeout(
+      () => toast.classList.remove("is-visible"),
+      3400,
+    );
+  };
+
+  const wakeCooldownTimers = new WeakMap();
+
+  const stopWakeCountdown = (form) => {
+    const timer = wakeCooldownTimers.get(form);
+    if (timer) {
+      window.clearInterval(timer);
+      wakeCooldownTimers.delete(form);
+    }
+  };
+
+  const applyWakeCooldown = (form, seconds) => {
+    const button = form.querySelector("[data-wake-button]");
+    if (!button) {
+      return;
+    }
+
+    stopWakeCountdown(form);
+    const readyAt = Date.now() + Math.max(0, seconds) * 1000;
+    const renderCountdown = () => {
+      const remainingSeconds = Math.max(
+        0,
+        Math.ceil((readyAt - Date.now()) / 1000),
+      );
+      button.disabled = remainingSeconds > 0;
+      button.textContent =
+        remainingSeconds > 0 ? `Wake (${remainingSeconds}s)` : "Wake";
+
+      if (remainingSeconds === 0) {
+        stopWakeCountdown(form);
+      }
+    };
+
+    renderCountdown();
+    if (readyAt > Date.now()) {
+      wakeCooldownTimers.set(
+        form,
+        window.setInterval(renderCountdown, 250),
+      );
+    }
+  };
+
+  const refreshWakeCooldown = async (form) => {
+    const button = form.querySelector("[data-wake-button]");
+    try {
+      const response = await window.fetch(form.dataset.cooldownUrl, {
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) {
+        throw new Error("Unable to retrieve wake cooldown");
+      }
+      const cooldown = await response.json();
+      applyWakeCooldown(form, cooldown.remainingSeconds);
+      return true;
+    } catch {
+      stopWakeCountdown(form);
+      if (button) {
+        button.disabled = true;
+        button.textContent = "Wake unavailable";
+      }
+      showToast("Unable to check wake cooldown", "error");
+      return false;
+    }
+  };
+
+  document.querySelectorAll("[data-wake-form]").forEach((form) => {
+    const button = form.querySelector("[data-wake-button]");
+    refreshWakeCooldown(form);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!button || button.disabled) {
+        return;
+      }
+
+      stopWakeCountdown(form);
+      button.disabled = true;
+      button.textContent = "Waking…";
+
+      try {
+        const response = await window.fetch("/api/v1/wake", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ deviceId: form.dataset.deviceId }),
+        });
+        if (!response.ok) {
+          throw new Error("Wake request failed");
+        }
+        showToast("Magic Packet correctly sent");
+      } catch {
+        showToast("Unable to wake device", "error");
+      } finally {
+        await refreshWakeCooldown(form);
+      }
+    });
+  });
 
   const eventsPage = document.querySelector("[data-events-page]");
   if (eventsPage) {

@@ -59,6 +59,7 @@ file:
 | Variable | Description | Default |
 | --- | --- | --- |
 | `WOLWM_TIMEZONE` | IANA time zone used by new schedules, such as `Europe/Rome` | `UTC` |
+| `WOLWM_WAKE_COOLDOWN_SECONDS` | Minimum wait between wake requests for the same device | `10` |
 | `WOLWM_DATA_FOLDER` | Directory containing the SQLite database | `~/.wolwm` |
 
 Changing `WOLWM_TIMEZONE` does not alter existing schedules; each schedule

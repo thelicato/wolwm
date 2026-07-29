@@ -9,3 +9,4 @@ services:
     environment:
       - WOLWM_DATA_FOLDER=/wolwm
       - WOLWM_TIMEZONE=${WOLWM_TIMEZONE:-UTC}
+      - WOLWM_WAKE_COOLDOWN_SECONDS=${WOLWM_WAKE_COOLDOWN_SECONDS:-10}

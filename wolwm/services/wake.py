@@ -4,6 +4,7 @@ Service module for waking up devices
 
 # Standard library imports
 from datetime import datetime, timedelta
+from math import ceil
 
 # External library imports
 from wakeonlan import send_magic_packet
@@ -13,6 +14,61 @@ from wolwm import types
 from wolwm.config import default
 from wolwm.db import crud
 from wolwm.utils import helper
+
+
+def configured_cooldown_seconds() -> int:
+    """Return and validate the configured wake cooldown."""
+
+    raw_value = helper.get_config_var(
+        "WOLWM_WAKE_COOLDOWN_SECONDS",
+        default.DEFAULT_SECONDS_BETWEEN_WAKES,
+    )
+    try:
+        cooldown_seconds = int(raw_value)
+    except (TypeError, ValueError) as err:
+        raise ValueError(
+            "WOLWM_WAKE_COOLDOWN_SECONDS must be a non-negative integer"
+        ) from err
+
+    if cooldown_seconds < 0:
+        raise ValueError(
+            "WOLWM_WAKE_COOLDOWN_SECONDS must be a non-negative integer"
+        )
+    return cooldown_seconds
+
+
+def _cooldown_for_device(
+    device: types.db.DBDevice,
+    current_datetime: datetime,
+) -> types.api.WakeCooldownRes:
+    """Calculate the remaining cooldown against the device's last wake."""
+
+    available_at = device.last_waked + timedelta(
+        seconds=configured_cooldown_seconds()
+    )
+    remaining_seconds = max(
+        0,
+        ceil((available_at - current_datetime).total_seconds()),
+    )
+    return types.api.WakeCooldownRes(
+        device_id=device.id,
+        can_wake=remaining_seconds == 0,
+        remaining_seconds=remaining_seconds,
+    )
+
+
+def get_wake_cooldown(
+    device_id: str,
+    *,
+    current_datetime: datetime | None = None,
+) -> types.api.WakeCooldownRes:
+    """Return how long a device must wait before another wake request."""
+
+    device = crud.get_device_by_id(device_id)
+    return _cooldown_for_device(
+        device,
+        current_datetime or datetime.now(),
+    )
 
 
 def wake_device(
@@ -28,13 +84,8 @@ def wake_device(
     if not helper.is_valid_mac(device.mac):
         raise Exception("Invalid MAC Address")
     
-    # Get the current datetime
-    current_datetime = datetime.now()
-
-    # Calculate the datetime for 10 seconds ago
-    datetime_to_compare = current_datetime - timedelta(seconds=default.DEFAULT_SECONDS_BETWEEN_WAKES)
-
-    if device.last_waked > datetime_to_compare:
+    cooldown = _cooldown_for_device(device, datetime.now())
+    if not cooldown.can_wake:
         raise Exception("Not enough time passed since last wake")
 
     send_magic_packet(device.mac)

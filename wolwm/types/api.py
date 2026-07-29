@@ -80,6 +80,14 @@ class WakeReq(CamelModel):
     device_id: str
 
 
+class WakeCooldownRes(CamelModel):
+    """Current wake cooldown state for a device."""
+
+    device_id: str
+    can_wake: bool
+    remaining_seconds: int
+
+
 ###############################
 # Types for /events REST API #
 ###############################
