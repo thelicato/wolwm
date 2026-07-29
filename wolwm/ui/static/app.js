@@ -76,18 +76,8 @@
   };
 
   const prepareScheduleForm = (form) => {
-    const timezoneInput = form.querySelector("[data-timezone-input]");
-    const timezoneLabel = form.querySelector("[data-timezone-label]");
     const scheduleTime = form.querySelector("[data-schedule-time]");
-    const timezone =
-      Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 
-    if (timezoneInput) {
-      timezoneInput.value = timezone;
-    }
-    if (timezoneLabel) {
-      timezoneLabel.textContent = timezone;
-    }
     if (scheduleTime) {
       const now = new Date();
       scheduleTime.min = localDateTimeValue(now);

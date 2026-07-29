@@ -268,6 +268,7 @@ def schedules_page(
     """Render persistent scheduled wake-ups."""
 
     devices = services.devices.get_devices().devices
+    app_timezone = services.schedules.configured_timezone()
     devices_by_id = {device.id: device for device in devices}
     schedule_rows = [
         {
@@ -290,6 +291,7 @@ def schedules_page(
             "devices": devices,
             "schedule_rows": schedule_rows,
             "frequency_labels": SCHEDULE_FREQUENCY_LABELS,
+            "app_timezone": app_timezone,
         }
     )
     return _render(request, "schedules.html", context)

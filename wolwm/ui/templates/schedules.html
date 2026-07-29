@@ -102,7 +102,7 @@
       data-loading-form
     >
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      <input type="hidden" name="timezone" value="UTC" data-timezone-input>
+      <input type="hidden" name="timezone" value="{{ app_timezone }}">
 
       <label for="schedule-device">Device</label>
       <select id="schedule-device" name="device_id" required>
@@ -130,7 +130,7 @@
       </select>
 
       <p class="schedule-timezone">
-        Time zone: <strong data-timezone-label>UTC</strong>
+        Time zone: <strong>{{ app_timezone }}</strong>
       </p>
 
       <button class="button button--primary add-submit" type="submit" disabled>

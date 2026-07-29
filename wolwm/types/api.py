@@ -100,7 +100,7 @@ class CreateWakeScheduleReq(CamelModel):
     device_id: str
     scheduled_for: datetime
     frequency: ScheduleFrequency = ScheduleFrequency.ONCE
-    timezone: str = "UTC"
+    timezone: str | None = None
 
 
 class WakeSchedulesRes(CamelModel):

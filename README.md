@@ -25,7 +25,11 @@
    ```sh
    git clone https://github.com/thelicato/wolwm.git && cd wolwm
    ```
-2. Install dependencies:
+2. Create your configuration:
+   ```sh
+   cp .env.example .env
+   ```
+3. Start the application:
    ```sh
    docker compose up -d
    ```
@@ -46,6 +50,19 @@
 1. Open your browser and navigate to `http://localhost:5000`
 2. Add your device(s) by specifying a name and MAC address.
 3. Click "Wake" to send a magic packet immediately, or open **Schedules** to automate it.
+
+## ⚙️ Configuration
+
+Configuration can be supplied through environment variables or a local `.env`
+file:
+
+| Variable | Description | Default |
+| --- | --- | --- |
+| `WOLWM_TIMEZONE` | IANA time zone used by new schedules, such as `Europe/Rome` | `UTC` |
+| `WOLWM_DATA_FOLDER` | Directory containing the SQLite database | `~/.wolwm` |
+
+Changing `WOLWM_TIMEZONE` does not alter existing schedules; each schedule
+retains the time zone in which it was created.
 
 
 ## 📷 Screenshots

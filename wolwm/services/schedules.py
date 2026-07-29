@@ -7,6 +7,7 @@ from datetime import UTC, date, datetime, time, timedelta
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from wolwm import types
+from wolwm.config import default
 from wolwm.db import crud
 from wolwm.log import logger
 from wolwm.services.wake import wake_device
@@ -28,6 +29,16 @@ def _zone(timezone_name: str) -> ZoneInfo:
         return ZoneInfo(timezone_name)
     except (ZoneInfoNotFoundError, ValueError) as err:
         raise ValueError("Invalid time zone") from err
+
+
+def configured_timezone() -> str:
+    """Return and validate the application time zone."""
+
+    timezone_name = str(
+        helper.get_config_var("WOLWM_TIMEZONE", default.DEFAULT_TIMEZONE)
+    ).strip()
+    _zone(timezone_name)
+    return timezone_name
 
 
 def _as_utc(local_or_aware: datetime, timezone_name: str) -> datetime:
@@ -68,7 +79,8 @@ def create_schedule(
 
     device = crud.get_device_by_id(data.device_id)
     frequency = types.enum.ScheduleFrequency(data.frequency)
-    next_run_at = _as_utc(data.scheduled_for, data.timezone)
+    timezone_name = data.timezone or configured_timezone()
+    next_run_at = _as_utc(data.scheduled_for, timezone_name)
 
     if next_run_at <= utc_now():
         raise ValueError("Scheduled time must be in the future")
@@ -78,7 +90,7 @@ def create_schedule(
         device_id=device.id,
         next_run_at=next_run_at,
         frequency=frequency,
-        timezone=data.timezone,
+        timezone=timezone_name,
         enabled=True,
         last_run_at=None,
         last_error=None,
@@ -88,7 +100,7 @@ def create_schedule(
         types.enum.EventType.SCHEDULE_CREATED,
         (
             f"Wake schedule '{schedule.id}' created for '{device.name}' "
-            f"({frequency.value}, {data.timezone})"
+            f"({frequency.value}, {timezone_name})"
         ),
     )
     return types.common.WakeSchedule.model_validate(schedule)

@@ -32,6 +32,7 @@ async def application_lifespan(application: fastapi.FastAPI):
 
     helper.setup_folders()
     db.init_db()
+    services.schedules.configured_timezone()
 
     async with formatter.configure_logging(application):
         scheduler_task = asyncio.create_task(

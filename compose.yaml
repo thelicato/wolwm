@@ -8,3 +8,4 @@ services:
       - ./wolwm_data:/wolwm
     environment:
       - WOLWM_DATA_FOLDER=/wolwm
+      - WOLWM_TIMEZONE=${WOLWM_TIMEZONE:-UTC}

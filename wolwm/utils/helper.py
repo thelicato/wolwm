@@ -9,12 +9,18 @@ This module contains multiple helper function used throughout the codebase.
 # Standard library imports
 import os
 import re
+from pathlib import Path
 from uuid import uuid4
 from typing import Any
+
+# External library imports
+from starlette.config import Config
 
 # Local application imports
 from wolwm.log import logger
 from wolwm.config import default, definitions
+
+config = Config(".env") if Path(".env").is_file() else Config()
 
 
 def banner(version: str) -> None:
@@ -39,7 +45,7 @@ def generate_id() -> str:
 
 def get_config_var(config_var: str, default_value: Any) -> Any:
     """Get config var"""
-    return os.getenv(config_var, default_value)
+    return config(config_var, default=default_value)
 
 
 def setup_folders() -> None:
