@@ -153,11 +153,170 @@
     window.setTimeout(() => toast.classList.remove("is-visible"), 3400);
   }
 
-  const searchForm = document.querySelector("[data-search-form]");
-  const searchInput = document.querySelector("[data-event-search]");
-  let searchTimer;
-  searchInput?.addEventListener("input", () => {
-    window.clearTimeout(searchTimer);
-    searchTimer = window.setTimeout(() => searchForm?.requestSubmit(), 300);
-  });
+  const eventsPage = document.querySelector("[data-events-page]");
+  if (eventsPage) {
+    const table = eventsPage.querySelector("[data-event-table]");
+    const tableBody = table?.querySelector("tbody");
+    const tableContainer = eventsPage.querySelector(
+      "[data-event-table-container]",
+    );
+    const rows = Array.from(
+      eventsPage.querySelectorAll("[data-event-row]"),
+    );
+    const searchInput = eventsPage.querySelector("[data-event-search]");
+    const emptyState = eventsPage.querySelector("[data-event-empty]");
+    const pagination = eventsPage.querySelector("[data-event-pagination]");
+    const pageStatus = eventsPage.querySelector("[data-page-status]");
+    const sortButtons = Array.from(
+      eventsPage.querySelectorAll("[data-sort-key]"),
+    );
+    const pageButtons = Array.from(
+      eventsPage.querySelectorAll("[data-page-action]"),
+    );
+    const pageSize =
+      Number.parseInt(eventsPage.dataset.pageSize || "", 10) || 10;
+    const originalPositions = new Map(
+      rows.map((row, index) => [row, index]),
+    );
+    const collator = new Intl.Collator(undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+
+    let activeSortKey = "";
+    let sortDirection = "asc";
+    let currentPage = 1;
+    let pageCount = 1;
+
+    const normalizedSearchText = (row) =>
+      `${row.dataset.eventType || ""} ${row.dataset.eventData || ""}`
+        .replaceAll("_", " ")
+        .toLocaleLowerCase();
+
+    const compareRows = (left, right) => {
+      const leftValue = left.dataset[activeSortKey] || "";
+      const rightValue = right.dataset[activeSortKey] || "";
+      const comparison = collator.compare(leftValue, rightValue);
+      if (comparison !== 0) {
+        return sortDirection === "asc" ? comparison : -comparison;
+      }
+      return originalPositions.get(left) - originalPositions.get(right);
+    };
+
+    const updateSortIndicators = () => {
+      sortButtons.forEach((button) => {
+        const isActive = button.dataset.sortKey === activeSortKey;
+        const heading = button.closest("th");
+        const indicator = button.querySelector(".sort-indicator");
+        heading?.setAttribute(
+          "aria-sort",
+          isActive
+            ? sortDirection === "asc"
+              ? "ascending"
+              : "descending"
+            : "none",
+        );
+        if (indicator) {
+          indicator.textContent = isActive
+            ? sortDirection === "asc"
+              ? "▲"
+              : "▼"
+            : "";
+        }
+      });
+    };
+
+    const renderEvents = () => {
+      const query = (searchInput?.value || "").trim().toLocaleLowerCase();
+      const orderedRows = [...rows];
+      if (activeSortKey) {
+        orderedRows.sort(compareRows);
+      }
+
+      const matchingRows = orderedRows.filter(
+        (row) => !query || normalizedSearchText(row).includes(query),
+      );
+      const matchingSet = new Set(matchingRows);
+      tableBody?.append(
+        ...matchingRows,
+        ...orderedRows.filter((row) => !matchingSet.has(row)),
+      );
+
+      pageCount = Math.max(
+        1,
+        Math.ceil(matchingRows.length / pageSize),
+      );
+      currentPage = Math.min(Math.max(currentPage, 1), pageCount);
+      const firstVisibleRow = (currentPage - 1) * pageSize;
+      const visibleRows = new Set(
+        matchingRows.slice(firstVisibleRow, firstVisibleRow + pageSize),
+      );
+
+      rows.forEach((row) => {
+        row.hidden = !visibleRows.has(row);
+      });
+
+      const hasMatches = matchingRows.length > 0;
+      if (tableContainer) {
+        tableContainer.hidden = !hasMatches;
+      }
+      if (emptyState) {
+        emptyState.hidden = hasMatches;
+      }
+      if (pagination) {
+        pagination.hidden = !hasMatches || pageCount <= 1;
+      }
+      if (pageStatus) {
+        pageStatus.textContent = `${currentPage} of ${pageCount}`;
+      }
+
+      pageButtons.forEach((button) => {
+        const action = button.dataset.pageAction;
+        button.disabled =
+          (currentPage === 1 &&
+            (action === "first" || action === "previous")) ||
+          (currentPage === pageCount &&
+            (action === "next" || action === "last"));
+      });
+
+      updateSortIndicators();
+    };
+
+    sortButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const selectedKey = button.dataset.sortKey;
+        if (activeSortKey === selectedKey) {
+          sortDirection = sortDirection === "asc" ? "desc" : "asc";
+        } else {
+          activeSortKey = selectedKey;
+          sortDirection = "asc";
+        }
+        currentPage = 1;
+        renderEvents();
+      });
+    });
+
+    pageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.pageAction;
+        if (action === "first") {
+          currentPage = 1;
+        } else if (action === "previous") {
+          currentPage -= 1;
+        } else if (action === "next") {
+          currentPage += 1;
+        } else if (action === "last") {
+          currentPage = pageCount;
+        }
+        renderEvents();
+      });
+    });
+
+    searchInput?.addEventListener("input", () => {
+      currentPage = 1;
+      renderEvents();
+    });
+
+    renderEvents();
+  }
 })();

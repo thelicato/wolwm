@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 import hmac
-import math
 import secrets
 from datetime import UTC, datetime
-from difflib import SequenceMatcher
 from typing import Annotated, Any
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
@@ -126,24 +124,6 @@ def _base_context(
         "notice": notice or initial_notice,
         "notice_kind": safe_kind,
     }
-
-
-def _event_matches(event: types.common.Event, query: str) -> bool:
-    """Approximate the former fuzzy client-side event search."""
-
-    normalized_query = query.strip().casefold()
-    if not normalized_query:
-        return True
-
-    event_type = str(event.event_type).replace("_", " ")
-    searchable = f"{event_type} {event.event_data}".casefold()
-    if normalized_query in searchable:
-        return True
-
-    return any(
-        SequenceMatcher(None, normalized_query, word).ratio() >= 0.72
-        for word in searchable.split()
-    )
 
 
 @ui.get("/", include_in_schema=False)
@@ -373,54 +353,12 @@ def delete_schedule(
 @ui.get("/ui/events", response_class=HTMLResponse, include_in_schema=False)
 def events_page(
     request: Request,
-    q: Annotated[str, Query(max_length=120)] = "",
-    sort: Annotated[str, Query(max_length=20)] = "",
-    direction: Annotated[str, Query(max_length=4)] = "asc",
-    page: Annotated[int, Query(ge=1)] = 1,
     notice: Annotated[str, Query(max_length=120)] = "",
     kind: Annotated[str, Query(max_length=20)] = "success",
 ) -> HTMLResponse:
-    """Render filtered, sorted, and paginated events."""
+    """Render all events for client-side search, sorting, and pagination."""
 
-    events = [
-        event
-        for event in services.events.get_events().events
-        if _event_matches(event, q)
-    ]
-
-    sort_keys = {
-        "timestamp": lambda event: event.timestamp,
-        "event_type": lambda event: str(event.event_type),
-        "event_data": lambda event: event.event_data.casefold(),
-    }
-    if sort in sort_keys:
-        events.sort(
-            key=sort_keys[sort],
-            reverse=direction == "desc",
-        )
-    else:
-        sort = ""
-
-    direction = "desc" if direction == "desc" else "asc"
-    page_count = max(1, math.ceil(len(events) / EVENTS_PAGE_SIZE))
-    current_page = min(page, page_count)
-    page_start = (current_page - 1) * EVENTS_PAGE_SIZE
-    visible_events = events[page_start : page_start + EVENTS_PAGE_SIZE]
-
-    def events_url(**updates: Any) -> str:
-        query = {
-            "q": q,
-            "sort": sort,
-            "direction": direction,
-            "page": current_page,
-        }
-        query.update(updates)
-        compact_query = {
-            key: value
-            for key, value in query.items()
-            if value not in ("", None)
-        }
-        return f"/ui/events?{urlencode(compact_query)}"
+    events = services.events.get_events().events
 
     context = _base_context(
         active_page="events",
@@ -431,15 +369,10 @@ def events_page(
     )
     context.update(
         {
-            "events": visible_events,
+            "events": events,
             "event_type_labels": EVENT_TYPE_LABELS,
             "event_type_classes": EVENT_TYPE_CLASSES,
-            "query": q,
-            "sort": sort,
-            "direction": direction,
-            "current_page": current_page,
-            "page_count": page_count,
-            "events_url": events_url,
+            "events_page_size": EVENTS_PAGE_SIZE,
         }
     )
     return _render(request, "events.html", context)

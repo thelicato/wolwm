@@ -2,62 +2,53 @@
 {% import "_icons.html" as icons %}
 
 {% block content %}
-<section class="page">
+<section class="page" data-events-page data-page-size="{{ events_page_size }}">
   <h1>Events</h1>
 
-  <form action="/ui/events" method="get" class="event-search" role="search" data-search-form>
+  <div class="event-search" role="search">
     {{ icons.search() }}
     <input
-      name="q"
       type="search"
-      value="{{ query }}"
       maxlength="120"
       placeholder="Search event"
       aria-label="Search events"
       autocomplete="off"
       data-event-search
     >
-    {% if sort %}<input type="hidden" name="sort" value="{{ sort }}">{% endif %}
-    {% if direction %}<input type="hidden" name="direction" value="{{ direction }}">{% endif %}
-  </form>
+  </div>
 
-  {% if events %}
-  <div class="event-table-scroll">
-    <table class="event-table">
+  <div class="event-table-scroll" data-event-table-container{% if not events %} hidden{% endif %}>
+    <table class="event-table" data-event-table>
       <thead>
         <tr>
-          {% set timestamp_direction = 'desc' if sort == 'timestamp' and direction == 'asc' else 'asc' %}
-          {% set type_direction = 'desc' if sort == 'event_type' and direction == 'asc' else 'asc' %}
-          {% set info_direction = 'desc' if sort == 'event_data' and direction == 'asc' else 'asc' %}
-          <th>
-            <a href="{{ events_url(sort='timestamp', direction=timestamp_direction, page=1) }}">
+          <th aria-sort="none">
+            <button class="table-sort" type="button" data-sort-key="timestamp">
               Timestamp
-              {% if sort == "timestamp" %}
-                {% if direction == "asc" %}{{ icons.chevron_up() }}{% else %}{{ icons.chevron_down() }}{% endif %}
-              {% endif %}
-            </a>
+              <span class="sort-indicator" aria-hidden="true"></span>
+            </button>
           </th>
-          <th>
-            <a href="{{ events_url(sort='event_type', direction=type_direction, page=1) }}">
+          <th aria-sort="none">
+            <button class="table-sort" type="button" data-sort-key="eventType">
               Type
-              {% if sort == "event_type" %}
-                {% if direction == "asc" %}{{ icons.chevron_up() }}{% else %}{{ icons.chevron_down() }}{% endif %}
-              {% endif %}
-            </a>
+              <span class="sort-indicator" aria-hidden="true"></span>
+            </button>
           </th>
-          <th>
-            <a href="{{ events_url(sort='event_data', direction=info_direction, page=1) }}">
+          <th aria-sort="none">
+            <button class="table-sort" type="button" data-sort-key="eventData">
               Info
-              {% if sort == "event_data" %}
-                {% if direction == "asc" %}{{ icons.chevron_up() }}{% else %}{{ icons.chevron_down() }}{% endif %}
-              {% endif %}
-            </a>
+              <span class="sort-indicator" aria-hidden="true"></span>
+            </button>
           </th>
         </tr>
       </thead>
       <tbody>
         {% for event in events %}
-        <tr>
+        <tr
+          data-event-row
+          data-timestamp="{{ event.timestamp.isoformat() }}"
+          data-event-type="{{ event.event_type }}"
+          data-event-data="{{ event.event_data }}"
+        >
           <td>{{ event.timestamp.strftime("%Y-%m-%dT%H:%M:%S") }}</td>
           <td>
             <span class="event-type {{ event_type_classes.get(event.event_type, '') }}">
@@ -71,34 +62,39 @@
     </table>
   </div>
 
-  {% if page_count > 1 %}
-  <nav class="pagination" aria-label="Event pages">
-    {% if current_page > 1 %}
-      <a class="pagination-control pagination-control--first" href="{{ events_url(page=1) }}" aria-label="First page">«</a>
-      <a class="pagination-control" href="{{ events_url(page=current_page - 1) }}" aria-label="Previous page">‹</a>
-    {% else %}
-      <span class="pagination-control pagination-control--first is-disabled" aria-hidden="true">«</span>
-      <span class="pagination-control is-disabled" aria-hidden="true">‹</span>
-    {% endif %}
-
-    {% if current_page < page_count %}
-      <a class="pagination-control" href="{{ events_url(page=current_page + 1) }}" aria-label="Next page">›</a>
-      <a class="pagination-control" href="{{ events_url(page=page_count) }}" aria-label="Last page">»</a>
-    {% else %}
-      <span class="pagination-control is-disabled" aria-hidden="true">›</span>
-      <span class="pagination-control is-disabled" aria-hidden="true">»</span>
-    {% endif %}
-
+  <nav class="pagination" aria-label="Event pages" data-event-pagination hidden>
+    <button
+      class="pagination-control pagination-control--first"
+      type="button"
+      aria-label="First page"
+      data-page-action="first"
+    >«</button>
+    <button
+      class="pagination-control"
+      type="button"
+      aria-label="Previous page"
+      data-page-action="previous"
+    >‹</button>
+    <button
+      class="pagination-control"
+      type="button"
+      aria-label="Next page"
+      data-page-action="next"
+    >›</button>
+    <button
+      class="pagination-control"
+      type="button"
+      aria-label="Last page"
+      data-page-action="last"
+    >»</button>
     <span class="pagination-status">
-      Page <strong>{{ current_page }} of {{ page_count }}</strong>
+      Page <strong data-page-status>1 of 1</strong>
     </span>
   </nav>
-  {% endif %}
-  {% else %}
-  <div class="empty-state">
+
+  <div class="empty-state" data-event-empty{% if events %} hidden{% endif %}>
     {{ icons.error() }}
     <h2>No Events</h2>
   </div>
-  {% endif %}
 </section>
 {% endblock %}
